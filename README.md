@@ -2,7 +2,7 @@
 
 Uma coleção pessoal de ferramentas, configurações e workflows voltados para
 modding, tradução e engenharia reversa de jogos. O foco é utilidade e
-preservação — coisas que levaram tempo pra descobrir e valem ser documentadas.
+preservação de coisas que levaram tempo pra descobrir e valem ser documentadas.
 
 ---
 
