@@ -1,0 +1,131 @@
+<style>
+select, input { font-family: var(--font-mono); }
+.res-select { width: 100%; padding: 8px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; cursor: pointer; }
+.res-select:hover { border-color: var(--color-border-primary); }
+.label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; display: block; }
+.card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.result-val { font-size: 40px; font-weight: 500; color: var(--color-text-primary); font-family: var(--font-mono); }
+.result-sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+.warn { font-size: 12px; color: var(--color-text-warning); background: var(--color-background-warning); border-radius: var(--border-radius-md); padding: 6px 10px; margin-top: 8px; display: none; }
+.command-box { font-family: var(--font-mono); font-size: 14px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; color: var(--color-text-primary); margin-top: 12px; user-select: all; cursor: text; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1rem 0; }
+.copy-btn { font-size: 12px; padding: 4px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; margin-top: 8px; }
+.copy-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<div style="padding: 1rem 0;">
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+  <div>
+    <span class="label">Resolução nativa (do monitor)</span>
+    <select class="res-select" id="native"></select>
+  </div>
+  <div>
+    <span class="label">Resolução alvo (renderização)</span>
+    <select class="res-select" id="target"></select>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+  <div class="card">
+    <span class="label">r.ScreenPercentage</span>
+    <div class="result-val" id="pct">—</div>
+    <div class="result-sub" id="pct-sub"></div>
+    <div class="warn" id="warn-up">Upscaling: resultado acima de 100%</div>
+    <div class="warn" id="warn-same">Resoluções idênticas</div>
+  </div>
+  <div class="card">
+    <span class="label">Pixels renderizados</span>
+    <div class="result-val" id="mpx" style="font-size: 28px; padding-top: 8px;">—</div>
+    <div class="result-sub" id="mpx-sub"></div>
+    <div class="result-sub" id="ratio-sub" style="margin-top: 4px;"></div>
+  </div>
+</div>
+
+<span class="label">Comando para console / ini</span>
+<div class="command-box" id="cmd">Selecione as resoluções acima</div>
+<button class="copy-btn" id="copy-btn" onclick="copyCmd()">Copiar comando</button>
+
+</div>
+
+<script>
+const resolutions = [
+  [128,72],[256,144],[384,216],[512,288],[640,360],[768,432],[896,504],
+  [1024,576],[1152,648],[1280,720,'720p HD'],[1408,792],[1536,864],[1664,936],
+  [1792,1008],[1920,1080,'1080p FHD'],[2048,1152],[2176,1224],[2304,1296],
+  [2432,1368],[2560,1440,'1440p / 27" QHD'],[2688,1512],[2816,1584],[2944,1656],
+  [3072,1728],[3200,1800],[3328,1872],[3456,1944],[3584,2016],[3712,2088],
+  [3840,2160,'4K UHDTV'],[3968,2232],[4096,2304],[4224,2376],[4352,2448],
+  [4480,2520],[4608,2592],[4736,2664],[4864,2736],[4992,2808],
+  [5120,2880,'Retina 5K'],[5248,2952],[5376,3024],[5504,3096],[5632,3168],
+  [5760,3240],[5888,3312],[6016,3384],[6144,3456],[6272,3528],[6400,3600],
+  [6528,3672],[6656,3744],[6784,3816],[6912,3888],[7040,3960],[7168,4032],
+  [7296,4104],[7424,4176],[7552,4248],[7680,4320,'8K UHDTV']
+];
+
+function label(r) {
+  const tag = r[2] ? ` — ${r[2]}` : '';
+  return `${r[0]} × ${r[1]}${tag}`;
+}
+
+const native = document.getElementById('native');
+const target = document.getElementById('target');
+
+resolutions.forEach((r, i) => {
+  const o1 = new Option(label(r), i);
+  const o2 = new Option(label(r), i);
+  native.appendChild(o1);
+  target.appendChild(o2);
+});
+
+native.value = resolutions.findIndex(r => r[0] === 1920);
+target.value = resolutions.findIndex(r => r[0] === 1280);
+
+function calc() {
+  const n = resolutions[+native.value];
+  const t = resolutions[+target.value];
+  const pct = (t[0] / n[0]) * 100;
+  const pctStr = pct.toFixed(4).replace(/\.?0+$/, '');
+  const pctRound = Math.round(pct * 100) / 100;
+  const mpx = ((t[0] * t[1]) / 1e6).toFixed(2);
+  const nmpx = ((n[0] * n[1]) / 1e6).toFixed(2);
+  const saving = (100 - (t[0]*t[1])/(n[0]*n[1])*100).toFixed(1);
+  const gain = ((t[0]*t[1])/(n[0]*n[1])*100 - 100).toFixed(1);
+
+  document.getElementById('pct').textContent = pctRound + '%';
+  document.getElementById('pct-sub').textContent = `Valor exato: ${pctStr}`;
+  document.getElementById('mpx').textContent = mpx + ' MP';
+  document.getElementById('mpx-sub').textContent = `Nativo: ${nmpx} MP`;
+
+  const warnUp = document.getElementById('warn-up');
+  const warnSame = document.getElementById('warn-same');
+  warnUp.style.display = pct > 100 ? 'block' : 'none';
+  warnSame.style.display = pct === 100 ? 'block' : 'none';
+
+  if (pct < 100) {
+    document.getElementById('ratio-sub').textContent = `${saving}% menos pixels`;
+  } else if (pct > 100) {
+    document.getElementById('ratio-sub').textContent = `${gain}% mais pixels`;
+  } else {
+    document.getElementById('ratio-sub').textContent = '';
+  }
+
+  const exact = Number.isInteger(pct) ? pct : parseFloat(pctStr);
+  document.getElementById('cmd').textContent = `r.ScreenPercentage ${exact}`;
+}
+
+function copyCmd() {
+  const txt = document.getElementById('cmd').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar comando', 1500);
+  });
+}
+
+native.addEventListener('change', calc);
+target.addEventListener('change', calc);
+calc();
+</script>
