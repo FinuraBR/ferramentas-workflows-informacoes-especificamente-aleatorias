@@ -97,3 +97,31 @@ está no repositório linkado.
 > (campos como `HistoryType`, `Flags`, `Type`). Jogos com versões de UE muito antigas
 > ou muito novas podem requerer ajustes nas regras de filtragem do `config.py`.
 > Assets com IO Store / Zen Loader (UE 5.0+) exigem ferramentas adicionais para extração.
+
+---
+
+### `r.ScreenPercentage calculator UE games.html` — Calculadora de r.ScreenPercentage para Jogos UE
+
+Ferramenta HTML standalone para calcular o valor correto de `r.ScreenPercentage`
+em jogos Unreal Engine. Útil para configurar renderização interna abaixo ou acima
+da resolução nativa do monitor (downscaling para performance ou supersampling para qualidade).
+
+**Como funciona:**
+
+Selecione a resolução nativa do seu monitor e a resolução alvo de renderização.
+A calculadora retorna:
+
+- O valor exato de `r.ScreenPercentage` (com casas decimais quando necessário)
+- Total de megapixels renderizados vs nativo
+- Percentual de pixels economizados (downscale) ou adicionados (supersampling)
+- O comando completo pronto para copiar e colar no console do jogo ou no `Engine.ini`
+
+Suporta resoluções de 128×72 até 8K (7680×4320), incluindo atalhos para
+resolucões comuns como 720p, 1080p, 1440p, 4K e 5K.
+
+> Funciona diretamente no navegador, sem instalação ou dependências.
+> Abra o arquivo `.html` localmente e use offline.
+
+**Como usar:** Abra o arquivo no navegador, selecione as resoluções e copie
+o comando gerado para o console do jogo (`~`) ou adicione ao `Engine.ini`
+dentro de `[SystemSettings]`.
