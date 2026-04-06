@@ -1,0 +1,3 @@
+https://github.com/FinuraBR/traducao-jogos-e-guias/tree/main/Jogos/3%20out%20of%2010
+
+backup: https://github.com/FinuraBR/traducao-jogos-e-guias/tree/8fb96b4accb5795277bf78b0d856647b38487f37/Jogos/3%20out%20of%2010
