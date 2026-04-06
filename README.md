@@ -6,9 +6,20 @@ preservação de coisas que levaram tempo pra descobrir e valem ser documentadas
 
 ---
 
+## 📋 Índice
+
+- [Source.cfg — Config de Qualidade Máxima para Source Engine](#source)
+- [UE4.ini — Config de Qualidade Máxima para Unreal Engine 4/5](#ue4ini)
+- [Tradução jogos UE Workflow.txt — Pipeline de Tradução Automatizada para Jogos UE](#tradução-jogos-ue-workflow)
+- [r.ScreenPercentage calculator UE games.html — Calculadora de r.ScreenPercentage para Jogos UE](#rscreenpercentage-calculator-ue-games)
+- [cheat engine calculadora.html — Calculadora Hexadecimal](#cheat-engine-calculadora)
+- [Tabela de Tipos de Dados e Limites.md](#tabela-de-tipos-de-dados-e-limites)
+
+---
+
 ## 📁 Conteúdo
 
-### `Source.cfg` — Config de Qualidade Máxima para Source Engine
+### <a name="source"></a>`Source.cfg` — Config de Qualidade Máxima para Source Engine
 
 Arquivo de configuração base para jogos da Source Engine (CS:S, HL2, GMod, etc.)
 com foco em fidelidade visual máxima. Organizado por categoria:
@@ -35,7 +46,7 @@ e execute `exec Source` no console, ou adicione ao seu `autoexec.cfg`.
 
 ---
  
-### `UE4.ini` — Config de Qualidade Máxima para Unreal Engine 4/5
+### <a name="ue4ini"></a>`UE4.ini` — Config de Qualidade Máxima para Unreal Engine 4/5
  
 Arquivo de configuração base para jogos em Unreal Engine com foco em fidelidade
 visual máxima via `[SystemSettings]`. Compatível com UE4 e em grande parte com
@@ -64,7 +75,7 @@ console em runtime se não houver restrição.
 
 ---
  
-### `Tradução jogos UE Workflow.txt` — Pipeline de Tradução Automatizada para Jogos UE
+### <a name="tradução-jogos-ue-workflow"></a>`Tradução jogos UE Workflow.txt` — Pipeline de Tradução Automatizada para Jogos UE
  
 Referência para um pipeline completo de tradução via Python + IA, desenvolvido
 originalmente para *3 out of 10* (UE 4.24.3) e generalizável para qualquer jogo
@@ -100,7 +111,7 @@ está no repositório linkado.
 
 ---
 
-### `r.ScreenPercentage calculator UE games.html` — Calculadora de r.ScreenPercentage para Jogos UE
+### <a name="rscreenpercentage-calculator-ue-games"></a>`r.ScreenPercentage calculator UE games.html` — Calculadora de r.ScreenPercentage para Jogos UE
 
 Ferramenta HTML standalone para calcular o valor correto de `r.ScreenPercentage`
 em jogos Unreal Engine. Útil para configurar renderização interna abaixo ou acima
@@ -128,7 +139,7 @@ dentro de `[SystemSettings]`.
 
 ---
 
-### `cheat engine calculadora.html` — Calculadora Hexadecimal
+### <a name="cheat-engine-calculadora"></a>`cheat engine calculadora.html` — Calculadora Hexadecimal
 
 Ferramenta HTML standalone para operações com valores hexadecimais. Nasceu
 como auxiliar para Cheat Engine, mas serve para qualquer contexto que envolva
@@ -169,7 +180,7 @@ contar manualmente.
 
 ---
 
-### `Tabela de Tipos de Dados e Limites.md`
+### <a name="tabela-de-tipos-de-dados-e-limites"></a>`Tabela de Tipos de Dados e Limites.md`
 
 Referência completa de tipos de dados para uso em reverse
 engineering e programação geral. Cobre todos os tipos relevantes com valores mínimos, máximos e
