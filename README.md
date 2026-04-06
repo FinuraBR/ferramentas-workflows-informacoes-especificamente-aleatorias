@@ -125,3 +125,44 @@ resolucões comuns como 720p, 1080p, 1440p, 4K e 5K.
 **Como usar:** Abra o arquivo no navegador, selecione as resoluções e copie
 o comando gerado para o console do jogo (`~`) ou adicione ao `Engine.ini`
 dentro de `[SystemSettings]`.
+
+---
+
+### `cheat engine calculadora.html` — Calculadora Hexadecimal
+
+Ferramenta HTML standalone para operações com valores hexadecimais. Nasceu
+como auxiliar para Cheat Engine, mas serve para qualquer contexto que envolva
+aritmética e lógica em hex — offsets de memória, endereços, máscaras de bits,
+scripts de assembly, etc.
+
+**Aba: Calculadora Hex**
+
+Realiza operações binárias entre dois valores hex (A e B):
+
+`A − B` `A + B` `A × B` `A ÷ B` `A mod B` `A & B` `A | B` `A ^ B` `A << B` `A >> B`
+
+Também suporta operações unárias sobre A:
+NOT, NEG, Align 4, Align 16 e próxima potência de 2.
+
+O resultado é exibido simultaneamente em HEX, DEC, BIN e em bytes (com
+conversão para KB quando aplicável). Para valores positivos, exibe uma
+recomendação visual de tamanho para `alloc(newmem, $???)` do Cheat Engine,
+indicando qual bloco é insuficiente, apertado ou ideal com base no valor calculado.
+
+**Aba: Analisar Código CE**
+
+Cole um bloco de auto-assembler do Cheat Engine (de `newmem:` até o último
+`jmp return`) e a ferramenta estima o tamanho em bytes de cada instrução,
+exibindo um breakdown linha a linha. Suporta:
+
+- Instruções comuns x64: `mov`, `lea`, `push`, `pop`, `add`, `sub`, `cmp`, `xchg`, `ret`, etc.
+- SSE: `movss`, `movsd`, `mulss`, `addss` e variantes
+- Saltos e calls: `jmp`, `call`, `jcc` (rel32 e via registrador)
+- Diretivas: `align N`, `db`, `dq`, `dd`, `dw`, `nop`
+
+Ao final exibe o total estimado de bytes e a mesma recomendação de `alloc`
+da aba anterior, facilitando saber qual tamanho de bloco alocar sem precisar
+contar manualmente.
+
+> Funciona diretamente no navegador, sem instalação ou dependências.
+> Abra o arquivo `.html` localmente e use offline.
