@@ -61,3 +61,39 @@ Organizado por categoria:
 `Engine\Config\ConsoleVariables.ini` ou no `DefaultEngine.ini` do jogo
 (geralmente em `<Jogo>\Engine\Config\`). Alguns jogos também aceitam via
 console em runtime se não houver restrição.
+
+---
+ 
+### `Tradução jogos UE Workflow.txt` — Pipeline de Tradução Automatizada para Jogos UE
+ 
+Referência para um pipeline completo de tradução via Python + IA, desenvolvido
+originalmente para *3 out of 10* (UE 4.24.3) e generalizável para qualquer jogo
+Unreal Engine que não ofusque seus assets. Potencialmente adaptável a outras
+engines com ferramentas equivalentes de extração e injeção de assets.
+ 
+O arquivo contém links para o repositório de referência (branch principal e commit
+fixo de backup). A implementação completa, incluindo todos os scripts e instruções,
+está no repositório linkado.
+ 
+**Duas trilhas de processamento, dependendo do tipo de arquivo:**
+ 
+- **Trilha `.locres`** (strings de UI, legendas, menus via sistema de localização nativo da UE): exportação para CSV pelo *UE4 Localizations Tool* → divisão em partes → tradução via IA → merge → reimportação
+- **Trilha `.uasset`** (DataTables, Blueprints, strings embutidas): extração binária via *FModel* → filtro por keywords em mmap → conversão para JSON via *UAssetGUI CLI* → extração recursiva de strings traduzíveis → divisão em partes → tradução via IA → injeção de volta no JSON mestre → reconversão para `.uasset`
+ 
+**Destaques técnicos do pipeline:**
+ 
+- **Filtragem inteligente em dois estágios**: varredura binária com `mmap` (rápida, descarta assets sem texto antes de qualquer conversão) seguida de análise semântica do JSON convertido (descarta strings técnicas, IDs, paths e flags `Immutable`)
+- **Orquestrador com códigos de saída**: `6_processar_tudo.py` gerencia a fila completa de arquivos, detecta o que já foi processado e pausa automaticamente quando novos termos técnicos precisam ser adicionados à blacklist
+- **Resiliência da chamada de IA**: threads com timeout configurável e retry automático; proteção contra loop de gasto em erros de saldo insuficiente
+- **Validação pós-tradução**: verificação de contagem de itens e integridade de tags técnicas (`{0}`, `%s`, `<tags>`) antes de salvar qualquer arquivo
+- **Aprendizado de blacklist**: quando a IA retorna o texto sem traduzir (original == traduzido), o termo é registrado automaticamente em `sugestoes_blacklist.txt` para revisão
+- **Script de QA automatizado** (opcional): abre o jogo via subprocesso, empacota o mod em `.pak` e monitora crashes e estado "Não Respondendo" via `pyautogui` + `psutil`
+ 
+**Ferramentas externas utilizadas:** FModel, UAssetGUI / UAssetAPI, UE4 Localizations Tool, UnrealPak
+ 
+**Modelos de IA suportados:** qualquer modelo via Ollama (local) ou API compatível com OpenAI (cloud via Puter); testado com DeepSeek e Qwen
+ 
+> ⚠️ O pipeline depende da estrutura de metadados que o UAssetGUI expõe no JSON
+> (campos como `HistoryType`, `Flags`, `Type`). Jogos com versões de UE muito antigas
+> ou muito novas podem requerer ajustes nas regras de filtragem do `config.py`.
+> Assets com IO Store / Zen Loader (UE 5.0+) exigem ferramentas adicionais para extração.
