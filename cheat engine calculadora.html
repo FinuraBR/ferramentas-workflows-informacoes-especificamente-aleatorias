@@ -1,0 +1,328 @@
+
+<style>
+  .w{padding:1rem 0}
+  .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+  .tab{padding:8px 18px;font-size:13px;font-family:var(--font-sans);cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;background:transparent;border-top:none;border-left:none;border-right:none;transition:color 0.15s}
+  .tab.active{color:var(--color-text-primary);border-bottom:2px solid var(--color-text-primary)}
+  .panel{display:none}.panel.active{display:block}
+  .ops{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .op-btn{border:0.5px solid var(--color-border-secondary);background:transparent;border-radius:var(--border-radius-md);padding:5px 12px;font-size:13px;cursor:pointer;color:var(--color-text-primary);font-family:var(--font-mono);transition:background 0.1s;white-space:nowrap}
+  .op-btn.active{background:var(--color-background-secondary);border-color:var(--color-border-primary)}
+  .row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .lbl{font-size:13px;color:var(--color-text-secondary);min-width:28px;font-family:var(--font-sans)}
+  input.hex{flex:1;font-family:var(--font-mono);font-size:15px;text-transform:uppercase}
+  .card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px 18px;margin-top:14px}
+  .res-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+  .res-lbl{font-size:12px;color:var(--color-text-secondary);font-family:var(--font-sans)}
+  .res-val{font-size:15px;font-weight:500;font-family:var(--font-mono);color:var(--color-text-primary)}
+  .res-val.main{font-size:22px}
+  .div{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:8px 0}
+  .err{font-size:13px;color:var(--color-text-danger);font-family:var(--font-sans);margin-top:6px}
+  .alloc-card{margin-top:12px;border-radius:var(--border-radius-lg);padding:14px 18px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+  .alloc-title{font-size:12px;color:var(--color-text-secondary);font-family:var(--font-sans);margin-bottom:10px}
+  .alloc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+  .alloc-pill{border-radius:var(--border-radius-md);padding:8px 6px;text-align:center;border:0.5px solid var(--color-border-tertiary)}
+  .alloc-pill .sz{font-size:15px;font-weight:500;font-family:var(--font-mono)}
+  .alloc-pill .pd{font-size:11px;margin-top:2px;font-family:var(--font-sans)}
+  .pill-no{background:var(--color-background-danger)}.pill-no .sz,.pill-no .pd{color:var(--color-text-danger)}
+  .pill-tight{background:var(--color-background-warning)}.pill-tight .sz,.pill-tight .pd{color:var(--color-text-warning)}
+  .pill-rec{background:var(--color-background-success);border:1.5px solid var(--color-border-success)}.pill-rec .sz,.pill-rec .pd{color:var(--color-text-success)}
+  .pill-ok{background:var(--color-background-success)}.pill-ok .sz,.pill-ok .pd{color:var(--color-text-success)}
+  .unary-row{display:flex;gap:8px;margin-bottom:10px}
+  .unary-btn{flex:1;border:0.5px solid var(--color-border-secondary);background:transparent;border-radius:var(--border-radius-md);padding:6px 0;font-size:12px;cursor:pointer;color:var(--color-text-secondary);font-family:var(--font-sans);transition:background 0.1s}
+  .unary-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+  .sec{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-sans);margin-bottom:6px;letter-spacing:0.04em;text-transform:uppercase}
+  textarea{width:100%;box-sizing:border-box;font-family:var(--font-mono);font-size:12px;min-height:160px;resize:vertical;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);padding:10px;line-height:1.6}
+  .breakdown{margin-top:14px}
+  .bk-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+  .bk-row:last-child{border-bottom:none}
+  .bk-ins{font-family:var(--font-mono);color:var(--color-text-primary)}
+  .bk-bytes{font-family:var(--font-mono);font-weight:500;color:var(--color-text-secondary);min-width:60px;text-align:right}
+  .bk-note{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-sans);margin-left:8px}
+  .bk-head{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-sans);display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-secondary);margin-bottom:4px}
+  .total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1.5px solid var(--color-border-secondary)}
+  .total-lbl{font-size:13px;font-family:var(--font-sans);color:var(--color-text-secondary)}
+  .total-val{font-size:20px;font-weight:500;font-family:var(--font-mono);color:var(--color-text-primary)}
+  .badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:var(--border-radius-md);font-family:var(--font-sans);margin-left:6px;vertical-align:middle}
+  .badge-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+  .badge-info{background:var(--color-background-info);color:var(--color-text-info)}
+</style>
+
+<div class="w">
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('hex')">Calculadora Hex</button>
+  <button class="tab" onclick="switchTab('code')">Analisar Código CE</button>
+</div>
+
+<!-- HEX TAB -->
+<div class="panel active" id="tab-hex">
+  <div class="sec">operação binária (A op B)</div>
+  <div class="ops">
+    <button class="op-btn active" id="op-sub" onclick="setOp('-','sub')">A − B</button>
+    <button class="op-btn" id="op-add" onclick="setOp('+','add')">A + B</button>
+    <button class="op-btn" id="op-mul" onclick="setOp('*','mul')">A × B</button>
+    <button class="op-btn" id="op-div" onclick="setOp('/','div')">A ÷ B</button>
+    <button class="op-btn" id="op-mod" onclick="setOp('%','mod')">A mod B</button>
+    <button class="op-btn" id="op-and" onclick="setOp('&','and')">A & B</button>
+    <button class="op-btn" id="op-or"  onclick="setOp('|','or')">A | B</button>
+    <button class="op-btn" id="op-xor" onclick="setOp('^','xor')">A ^ B</button>
+    <button class="op-btn" id="op-shl" onclick="setOp('<<','shl')">A &lt;&lt; B</button>
+    <button class="op-btn" id="op-shr" onclick="setOp('>>','shr')">A &gt;&gt; B</button>
+  </div>
+  <div class="row">
+    <span class="lbl">A</span>
+    <input type="text" class="hex" id="va" placeholder="ex: 1A000180" oninput="calc()" />
+  </div>
+  <div class="row">
+    <span class="lbl">B</span>
+    <input type="text" class="hex" id="vb" placeholder="ex: 1A000000" oninput="calc()" />
+  </div>
+  <div class="sec" style="margin-top:12px">operação unária (só A)</div>
+  <div class="unary-row">
+    <button class="unary-btn" onclick="unary('not')">NOT (~A)</button>
+    <button class="unary-btn" onclick="unary('neg')">NEG (−A)</button>
+    <button class="unary-btn" onclick="unary('align4')">Align 4</button>
+    <button class="unary-btn" onclick="unary('align16')">Align 16</button>
+    <button class="unary-btn" onclick="unary('nextpow2')">Próx. pot. 2</button>
+  </div>
+  <div id="err" class="err" style="display:none"></div>
+  <div class="card" id="result-card" style="display:none">
+    <div class="res-row"><span class="res-lbl">HEX</span><span class="res-val main" id="r-hex">—</span></div>
+    <hr class="div">
+    <div class="res-row"><span class="res-lbl">DEC</span><span class="res-val" id="r-dec">—</span></div>
+    <div class="res-row"><span class="res-lbl">BIN</span><span class="res-val" style="font-size:11px;word-break:break-all" id="r-bin">—</span></div>
+    <div class="res-row"><span class="res-lbl">BYTES</span><span class="res-val" id="r-bytes">—</span></div>
+  </div>
+  <div class="alloc-card" id="alloc-card" style="display:none">
+    <div class="alloc-title">recomendação de alloc(newmem, $???)</div>
+    <div class="alloc-grid" id="alloc-grid"></div>
+  </div>
+</div>
+
+<!-- CODE TAB -->
+<div class="panel" id="tab-code">
+  <div class="sec">cole o bloco newmem: ... até o último jmp return</div>
+  <textarea id="code-input" placeholder="newmem:
+code:
+  push rax
+  lea rax,[rcx+21C]
+  mov [myglobal],rax
+  pop rax
+  movss xmm1,[rcx+21C]
+  jmp return
+  align 16" oninput="parseCode()"></textarea>
+  <div id="code-err" class="err" style="display:none"></div>
+  <div id="code-result" style="display:none">
+    <div class="card breakdown">
+      <div class="bk-head"><span>instrução</span><span>bytes</span></div>
+      <div id="bk-list"></div>
+      <div class="total-row">
+        <span class="total-lbl">total estimado</span>
+        <span class="total-val" id="bk-total">—</span>
+      </div>
+    </div>
+    <div class="alloc-card" style="margin-top:12px">
+      <div class="alloc-title">recomendação de alloc(newmem, $???)</div>
+      <div class="alloc-grid" id="code-alloc-grid"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── TAB ──────────────────────────────────────────────────────────────────────
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>{b.classList.toggle('active',['hex','code'][i]===t)});
+  document.getElementById('tab-hex').classList.toggle('active',t==='hex');
+  document.getElementById('tab-code').classList.toggle('active',t==='code');
+}
+
+// ── HEX CALC ─────────────────────────────────────────────────────────────────
+let op='-';
+const sizes=[{h:'$40',b:64},{h:'$80',b:128},{h:'$100',b:256},{h:'$200',b:512},{h:'$400',b:1024},{h:'$800',b:2048},{h:'$1000',b:4096}];
+
+function setOp(o,id){op=o;document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('active'));document.getElementById('op-'+id).classList.add('active');calc()}
+function parseHex(s){s=s.trim().replace(/^0x/i,'');if(!s||!/^[0-9A-Fa-f]+$/.test(s))return null;return BigInt('0x'+s)}
+function showResult(res){
+  const neg=res<0n,abs=neg?-res:res;
+  document.getElementById('err').style.display='none';
+  document.getElementById('result-card').style.display='block';
+  document.getElementById('r-hex').textContent=(neg?'-':'')+'0x'+abs.toString(16).toUpperCase();
+  document.getElementById('r-dec').textContent=res.toString();
+  document.getElementById('r-bin').textContent=(neg?'-':'')+'0b'+abs.toString(2);
+  document.getElementById('r-bytes').textContent=neg?'N/A':Number(abs).toLocaleString()+' bytes'+(Number(abs)>=1024?' ('+(Number(abs)/1024).toFixed(2)+' KB)':'');
+  renderAlloc(neg?null:Number(abs),'alloc-grid');
+}
+function showErr(msg){document.getElementById('err').textContent=msg;document.getElementById('err').style.display='block';document.getElementById('result-card').style.display='none';document.getElementById('alloc-card').style.display='none'}
+function calc(){
+  const a=parseHex(document.getElementById('va').value),b=parseHex(document.getElementById('vb').value);
+  if(!a&&!b){document.getElementById('result-card').style.display='none';document.getElementById('alloc-card').style.display='none';document.getElementById('err').style.display='none';return}
+  if(!a||!b){document.getElementById('result-card').style.display='none';document.getElementById('alloc-card').style.display='none';document.getElementById('err').style.display='none';return}
+  let res;
+  try{
+    if(op==='-')res=a-b;else if(op==='+')res=a+b;else if(op==='*')res=a*b;
+    else if(op==='/'){{if(b===0n){showErr('Divisão por zero');return}res=a/b}}
+    else if(op==='%'){{if(b===0n){showErr('Divisão por zero');return}res=a%b}}
+    else if(op==='&')res=a&b;else if(op==='|')res=a|b;else if(op==='^')res=a^b;
+    else if(op==='<<')res=a<<b;else if(op==='>>') res=a>>b;
+  }catch(e){showErr('Erro no cálculo');return}
+  showResult(res);
+}
+function unary(t){
+  const raw=document.getElementById('va').value.trim().replace(/^0x/i,'');
+  if(!raw||!/^[0-9A-Fa-f]+$/.test(raw)){showErr('Preencha A com hex válido');return}
+  const a=BigInt('0x'+raw),bits=BigInt(raw.length<=8?32:64),mask=(1n<<bits)-1n;
+  let res;
+  if(t==='not')res=(~a)&mask;else if(t==='neg')res=(-a)&mask;
+  else if(t==='align4')res=(a+3n)&~3n;else if(t==='align16')res=(a+15n)&~15n;
+  else if(t==='nextpow2'){if(a===0n){showErr('A deve ser > 0');return}let p=1n;while(p<a)p<<=1n;res=p}
+  showResult(res);
+}
+
+// ── ALLOC RENDERER ────────────────────────────────────────────────────────────
+function renderAlloc(bytes,gridId){
+  const ac=document.getElementById('alloc-card')||document.getElementById('code-alloc-grid').parentElement;
+  if(gridId==='alloc-grid'){document.getElementById('alloc-card').style.display=bytes?'block':'none'}
+  if(!bytes||bytes<=0)return;
+  const margin=bytes*1.5;
+  let recIdx=sizes.findIndex(s=>s.b>=margin);if(recIdx<0)recIdx=sizes.length-1;
+  const grid=document.getElementById(gridId);grid.innerHTML='';
+  sizes.forEach((s,i)=>{
+    const pct=Math.round((bytes/s.b)*100);
+    let cls,desc;
+    if(s.b<bytes){cls='pill-no';desc='insuficiente'}
+    else if(s.b<margin){cls='pill-tight';desc=pct+'% usado'}
+    else if(i===recIdx){cls='pill-rec';desc='★ ideal'}
+    else{cls='pill-ok';desc=pct+'% usado'}
+    const d=document.createElement('div');d.className='alloc-pill '+cls;
+    d.innerHTML='<div class="sz">'+s.h+'</div><div class="pd">'+desc+'</div>';
+    grid.appendChild(d);
+  });
+}
+
+// ── CODE PARSER ───────────────────────────────────────────────────────────────
+const REGS64=['rax','rbx','rcx','rdx','rsi','rdi','rsp','rbp','r8','r9','r10','r11','r12','r13','r14','r15'];
+const REGS32=['eax','ebx','ecx','edx','esi','edi','esp','ebp','r8d','r9d','r10d','r11d','r12d','r13d','r14d','r15d'];
+const REGSXMM=['xmm0','xmm1','xmm2','xmm3','xmm4','xmm5','xmm6','xmm7','xmm8','xmm9','xmm10','xmm11','xmm12','xmm13','xmm14','xmm15'];
+
+function estimateBytes(line){
+  const l=line.trim().toLowerCase().replace(/\s+/g,' ');
+  if(!l||l.startsWith('//'))return null;
+
+  // labels (word followed by colon, no space before colon)
+  if(/^[a-z_][a-z0-9_]*:$/.test(l))return{bytes:0,note:'label'};
+
+  // align N
+  const alignM=l.match(/^align\s+(\d+)$/);
+  if(alignM){const n=parseInt(alignM[1]);return{bytes:Math.floor(n/2),note:'padding médio (0–'+(n-1)+')',warn:true}}
+
+  // db bytes (db 0F 9E C0 ...)
+  const dbM=l.match(/^db\s+((?:[0-9a-f]{2}\s*)+)/);
+  if(dbM){const count=dbM[1].trim().split(/\s+/).length;return{bytes:count,note:count+' byte(s) explícito(s)'}}
+
+  // dq / dd / dw
+  if(/^dq\s+/.test(l))return{bytes:8,note:'qword'}
+  if(/^dd\s+/.test(l))return{bytes:4,note:'dword'}
+  if(/^dw\s+/.test(l))return{bytes:2,note:'word'}
+
+  // nop N
+  const nopNM=l.match(/^nop\s+(\d+)$/);
+  if(nopNM)return{bytes:parseInt(nopNM[1]),note:'multi-nop'}
+  if(l==='nop')return{bytes:1,note:''}
+
+  // jmp / call (relative 5, or abs via reg 2-3)
+  if(/^jmp\s+/.test(l)){
+    const isReg=REGS64.some(r=>l.includes(' '+r))||REGS32.some(r=>l.includes(' '+r));
+    return isReg?{bytes:2,note:'jmp reg'}:{bytes:5,note:'jmp rel32'}}
+  if(/^call\s+/.test(l)){
+    const isReg=REGS64.some(r=>l.includes(' '+r));
+    return isReg?{bytes:2,note:'call reg'}:{bytes:5,note:'call rel32'}}
+
+  // short jumps
+  if(/^j[a-z]{1,3}\s+/.test(l))return{bytes:6,note:'jcc rel32'}
+
+  // ret
+  if(l==='ret'||l==='ret 0')return{bytes:1,note:''}
+  if(/^ret\s+\d+/.test(l))return{bytes:3,note:'ret imm16'}
+
+  // push / pop
+  if(/^push\s+/.test(l)){
+    if(REGS64.some(r=>l.endsWith(' '+r)))return{bytes:1,note:'push r64'}
+    return{bytes:2,note:'push'}}
+  if(/^pop\s+/.test(l))return{bytes:1,note:'pop r64'}
+
+  // movss / movsd / mulss / addss / subss / divss (SSE)
+  if(/^(movss|movsd|mulss|mulsd|addss|addsd|subss|subsd|divss|divsd|movaps|movups|movdqa|movdqu)\s+/.test(l)){
+    const hasMem=l.includes('[');
+    return{bytes:hasMem?8:4,note:'SSE'+(hasMem?'+mem':'')}}
+
+  // movzx / movsx
+  if(/^movzx\s+/.test(l)||/^movsx\s+/.test(l))return{bytes:4,note:''}
+
+  // lea
+  if(/^lea\s+/.test(l))return{bytes:7,note:'lea r64,[base+disp]'}
+
+  // mov
+  if(/^mov\s+/.test(l)){
+    const hasMem=l.includes('[');
+    const hasImm=/,\s*(0x[0-9a-f]+|\d+)$/.test(l);
+    if(hasMem)return{bytes:7,note:'mov mem'}
+    if(hasImm)return{bytes:7,note:'mov r,imm'}
+    return{bytes:3,note:'mov r,r'}}
+
+  // add / sub / and / or / xor / cmp
+  if(/^(add|sub|and|or|xor|cmp|test)\s+/.test(l)){
+    const hasMem=l.includes('[');
+    return{bytes:hasMem?6:3,note:''}}
+
+  // imul / idiv / mul / div
+  if(/^(imul|idiv|mul|div)\s+/.test(l))return{bytes:3,note:''}
+
+  // inc / dec
+  if(/^(inc|dec)\s+/.test(l))return{bytes:3,note:''}
+
+  // cdq / cqo / cdqe
+  if(['cdq','cqo','cdqe'].includes(l))return{bytes:2,note:''}
+
+  // xchg
+  if(/^xchg\s+/.test(l))return{bytes:3,note:''}
+
+  return{bytes:4,note:'estimativa',warn:true}
+}
+
+function parseCode(){
+  const raw=document.getElementById('code-input').value;
+  const lines=raw.split('\n');
+  const result=document.getElementById('code-result');
+  const errEl=document.getElementById('code-err');
+
+  if(!raw.trim()){result.style.display='none';errEl.style.display='none';return}
+
+  const list=document.getElementById('bk-list');list.innerHTML='';
+  let total=0;let hasContent=false;
+
+  // strip to newmem block if present
+  const startIdx=lines.findIndex(l=>/^\s*newmem\s*:/i.test(l)||/^\s*code\s*:/i.test(l));
+  const workLines=startIdx>=0?lines.slice(startIdx):lines;
+
+  workLines.forEach(rawLine=>{
+    const stripped=rawLine.replace(/\/\/.*$/,'').trim();
+    if(!stripped)return;
+    const est=estimateBytes(stripped);
+    if(!est)return;
+    if(est.note==='label')return;
+    hasContent=true;
+    total+=est.bytes;
+    const row=document.createElement('div');row.className='bk-row';
+    row.innerHTML=`<span class="bk-ins">${stripped.length>36?stripped.slice(0,36)+'…':stripped}${est.warn?'<span class="badge badge-warn">~</span>':''}</span><span class="bk-bytes">${est.bytes}B${est.note?'<span class="bk-note">'+est.note+'</span>':''}</span>`;
+    list.appendChild(row);
+  });
+
+  if(!hasContent){errEl.textContent='Nenhuma instrução reconhecida. Cole o bloco entre newmem: e o último jmp return.';errEl.style.display='block';result.style.display='none';return}
+
+  errEl.style.display='none';
+  document.getElementById('bk-total').textContent=total+' bytes';
+  result.style.display='block';
+  renderAlloc(total,'code-alloc-grid');
+}
+</script>
