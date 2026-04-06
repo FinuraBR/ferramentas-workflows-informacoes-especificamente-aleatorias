@@ -166,3 +166,24 @@ contar manualmente.
 
 > Funciona diretamente no navegador, sem instalação ou dependências.
 > Abra o arquivo `.html` localmente e use offline.
+
+---
+
+### `Tabela de Tipos de Dados e Limites.md`
+
+Referência completa de tipos de dados para uso em reverse
+engineering e programação geral. Cobre todos os tipos relevantes com valores mínimos, máximos e
+comportamento em overflow.
+
+**Seções:**
+
+- **Inteiros sem sinal (Unsigned)** — Byte, Word, DWORD, QWORD: faixa e comportamento de overflow
+- **Inteiros com sinal (Signed)** — Int8, Short, Int32, Int64: faixa negativa e wrap em overflow
+- **Ponto Flutuante** — Float e Double com valor mínimo/máximo, representações hex de +Inf, -Inf, NaN e Zero negativo
+- **Texto e Caractere** — Char, WChar, String e WString com encoding e terminação
+- **Tipos Lógicos e Especiais** — Bool (1 e 4 bytes), ponteiros 32/64-bit e Void
+- **Representações Hex Especiais** — Tabela de valores Float/Double notáveis em hex (1.0, -1.0, 0.5, máximo finito, zeros, NaN)
+- **Tamanhos por Arquitetura** — Diferenças de `int`, `long`, `pointer` e `size_t` entre x86 e x64
+
+> Todos os valores fracionários usam ponto (.) como separador decimal,
+> adequado para uso geral e ferramentas de debug.
