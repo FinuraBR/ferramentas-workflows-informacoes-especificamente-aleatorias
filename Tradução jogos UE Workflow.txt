@@ -1,3 +1,10 @@
+Pipeline de tradução automatizada para jogos Unreal Engine via Python + IA.
+Desenvolvido para "3 out of 10" (UE 4.24.3), mas funciona com qualquer jogo UE que
+não ofusque seus assets. Possivelmente adaptável a outras engines com ferramentas
+equivalentes (FModel, UAssetGUI, UnrealPak).
+
+Main (branch atual):
 https://github.com/FinuraBR/traducao-jogos-e-guias/tree/main/Jogos/3%20out%20of%2010
 
-backup: https://github.com/FinuraBR/traducao-jogos-e-guias/tree/8fb96b4accb5795277bf78b0d856647b38487f37/Jogos/3%20out%20of%2010
+Backup (commit fixo, estado estável de referência):
+https://github.com/FinuraBR/traducao-jogos-e-guias/tree/8fb96b4accb5795277bf78b0d856647b38487f37/Jogos/3%20out%20of%2010
