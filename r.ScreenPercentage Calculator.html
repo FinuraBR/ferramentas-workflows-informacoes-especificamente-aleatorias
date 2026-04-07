@@ -403,9 +403,9 @@
     <div class="field-group">
       <div class="field-label">Porcentagem desejada</div>
       <div class="pct-row">
-        <input type="range" id="rev-slider" min="25" max="200" step="1" value="75" oninput="syncSlider()" />
+        <input type="range" id="rev-slider" min="10" max="200" step="1" value="100" oninput="syncSlider()" />
         <div class="pct-input-wrap">
-          <input type="number" class="pct-num" id="rev-pct" min="1" max="400" value="75" oninput="syncInput()" />
+          <input type="number" class="pct-num" id="rev-pct" min="1" max="400" value="100" oninput="syncInput()" />
           <span class="pct-sym">%</span>
         </div>
       </div>
@@ -458,26 +458,74 @@ function switchTab(t){
     document.getElementById('tab-' + id).classList.toggle('active', id === t));
 }
 
-// ── RESOLUTIONS — real 16:9 only (w = 16k, h = 9k) ───────────────────────────
-// No name tags; label is just "W × H"
+// ── RESOLUTIONS — real 16:9 ───────────────────────────
 const resolutions = [
-  [256,  144],
-  [512,  288],
-  [640,  360],
-  [960,  540],
+  [128, 72],
+  [256, 144],
+  [384, 216],
+  [512, 288],
+  [640, 360],
+  [768, 432],
+  [896, 504],
   [1024, 576],
-  [1280, 720],
-  [1600, 900],
-  [1920, 1080],
+  [1152, 648],
+  [1280, 720, 'HD'],
+  [1408, 792],
+  [1536, 864],
+  [1664, 936],
+  [1792, 1008],
+  [1920, 1080, 'Full HD'],
   [2048, 1152],
-  [2560, 1440],
+  [2176, 1224],
+  [2304, 1296],
+  [2432, 1368],
+  [2560, 1440, 'QHD'],
+  [2688, 1512],
+  [2816, 1584],
+  [2944, 1656],
+  [3072, 1728],
   [3200, 1800],
-  [3840, 2160],
-  [5120, 2880],
-  [7680, 4320],
+  [3328, 1872],
+  [3456, 1944],
+  [3584, 2016],
+  [3712, 2088],
+  [3840, 2160, '4K UHD'],
+  [3968, 2232],
+  [4096, 2304],
+  [4224, 2376],
+  [4352, 2448],
+  [4480, 2520],
+  [4608, 2592],
+  [4736, 2664],
+  [4864, 2736],
+  [4992, 2808],
+  [5120, 2880, '5K'],
+  [5248, 2952],
+  [5376, 3024],
+  [5504, 3096],
+  [5632, 3168],
+  [5760, 3240],
+  [5888, 3312],
+  [6016, 3384],
+  [6144, 3456],
+  [6272, 3528],
+  [6400, 3600],
+  [6528, 3672],
+  [6656, 3744],
+  [6784, 3816],
+  [6912, 3888],
+  [7040, 3960],
+  [7168, 4032],
+  [7296, 4104],
+  [7424, 4176],
+  [7552, 4248],
+  [7680, 4320, '8K UHD'],
 ];
 
-function label(r){ return r[0] + ' × ' + r[1]; }
+function label(r) {
+  const tag = r[2] ? ` — ${r[2]}` : '';
+  return `${r[0]} × ${r[1]}${tag}`;
+}
 
 // Percentage formatted to at most 2 decimal places, no trailing zeros
 function fmtPct(pct){
@@ -493,7 +541,7 @@ function fmtPct(pct){
     resolutions.forEach((r, i) => sel.appendChild(new Option(label(r), i)));
   });
   document.getElementById('native-select').value     = resolutions.findIndex(r => r[0] === 1920);
-  document.getElementById('target-select').value     = resolutions.findIndex(r => r[0] === 1280);
+  document.getElementById('target-select').value     = resolutions.findIndex(r => r[0] === 2560);
   document.getElementById('rev-native-select').value = resolutions.findIndex(r => r[0] === 1920);
 })();
 
