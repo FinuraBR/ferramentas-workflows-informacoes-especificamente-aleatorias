@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HexKit</title>
+<style>
+  /* ── TOKENS ─────────────────────────────────────────────────────────── */
+  :root {
+    --font-mono: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    --font-sans: 'Segoe UI', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --transition: 0.2s ease;
+  }
+
+  [data-theme="dark"] {
+    --bg:           #0f1117;
+    --bg-card:      #161b22;
+    --bg-input:     #0d1117;
+    --bg-hover:     #1c2128;
+    --bg-active:    #21262d;
+    --border:       #30363d;
+    --border-focus: #58a6ff;
+    --text:         #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted:   #484f58;
+    --accent:       #58a6ff;
+    --accent-dim:   #1f3b5a;
+    --green:        #3fb950;
+    --green-bg:     #0d2a14;
+    --green-border: #238636;
+    --yellow:       #d29922;
+    --yellow-bg:    #2a1f00;
+    --red:          #f85149;
+    --red-bg:       #2a0d0d;
+    --tab-active-border: #58a6ff;
+    --result-main:  #58a6ff;
+  }
+
+  [data-theme="light"] {
+    --bg:           #f6f8fa;
+    --bg-card:      #ffffff;
+    --bg-input:     #ffffff;
+    --bg-hover:     #f3f4f6;
+    --bg-active:    #e8eaed;
+    --border:       #d0d7de;
+    --border-focus: #0969da;
+    --text:         #1f2328;
+    --text-secondary: #57606a;
+    --text-muted:   #afb8c1;
+    --accent:       #0969da;
+    --accent-dim:   #ddf4ff;
+    --green:        #1a7f37;
+    --green-bg:     #dafbe1;
+    --green-border: #2da44e;
+    --yellow:       #9a6700;
+    --yellow-bg:    #fff8c5;
+    --red:          #cf222e;
+    --red-bg:       #ffebe9;
+    --tab-active-border: #0969da;
+    --result-main:  #0969da;
+  }
+
+  /* ── RESET ───────────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────────────────────────── */
+  .container { max-width: 680px; margin: 0 auto; }
+
+  /* ── HEADER ──────────────────────────────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .logo-name {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .logo-name span { color: var(--accent); }
+  .logo-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+  }
+
+  .theme-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--transition), color var(--transition);
+  }
+  .theme-btn:hover { background: var(--bg-hover); color: var(--text); }
+
+  /* ── TABS ────────────────────────────────────────────────────────────── */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    gap: 0;
+  }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    color: var(--text-secondary);
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    transition: color var(--transition);
+    font-weight: 500;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--text);
+    border-bottom-color: var(--tab-active-border);
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── SECTION LABEL ───────────────────────────────────────────────────── */
+  .sec {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ── OP BUTTONS ──────────────────────────────────────────────────────── */
+  .ops {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .op-btn {
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 5px 13px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+    white-space: nowrap;
+  }
+  .op-btn:hover { background: var(--bg-hover); color: var(--text); }
+  .op-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── INPUTS ──────────────────────────────────────────────────────────── */
+  .field-group { margin-bottom: 12px; }
+  .field-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  .field-label .badge-lbl {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--bg-active);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--text-secondary);
+  }
+  .field-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  input.hex-input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    text-transform: uppercase;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 9px 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color var(--transition);
+  }
+  input.hex-input:focus { border-color: var(--border-focus); }
+  input.hex-input::placeholder { color: var(--text-muted); text-transform: none; }
+
+  .swap-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 14px;
+    transition: background var(--transition), color var(--transition);
+    flex-shrink: 0;
+  }
+  .swap-btn:hover { background: var(--bg-hover); color: var(--text); }
+
+  /* ── UNARY BUTTONS ───────────────────────────────────────────────────── */
+  .unary-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .unary-btn {
+    flex: 1;
+    min-width: 100px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+  }
+  .unary-btn:hover { background: var(--bg-hover); color: var(--text); }
+
+  /* ── ERROR ───────────────────────────────────────────────────────────── */
+  .err {
+    font-size: 13px;
+    color: var(--red);
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: var(--red-bg);
+    border-radius: var(--radius-sm);
+    display: none;
+  }
+
+  /* ── RESULT CARD ─────────────────────────────────────────────────────── */
+  .result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-top: 16px;
+    display: none;
+  }
+  .result-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-main-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .result-main-val {
+    font-size: 26px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--result-main);
+    letter-spacing: 1px;
+  }
+  .copy-btn {
+    background: var(--bg-active);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-family: var(--font-sans);
+    transition: background var(--transition), color var(--transition);
+  }
+  .copy-btn:hover { background: var(--bg-hover); color: var(--text); }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .result-item { display: flex; flex-direction: column; gap: 2px; }
+  .result-item-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .result-item-val { font-size: 13px; font-family: var(--font-mono); color: var(--text); word-break: break-all; }
+  .result-bin { grid-column: 1 / -1; }
+
+  /* ── ALLOC CARD ──────────────────────────────────────────────────────── */
+  .alloc-card {
+    margin-top: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    display: none;
+  }
+  .alloc-title { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .alloc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; }
+  .alloc-pill {
+    border-radius: var(--radius-sm);
+    padding: 8px 6px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: transform var(--transition);
+  }
+  .alloc-pill:hover { transform: translateY(-1px); }
+  .alloc-pill .sz { font-size: 14px; font-weight: 600; font-family: var(--font-mono); }
+  .alloc-pill .pd { font-size: 10px; margin-top: 2px; }
+  .pill-no  { background: var(--red-bg);    border-color: var(--red);   }
+  .pill-no  .sz, .pill-no  .pd { color: var(--red); }
+  .pill-tight{ background: var(--yellow-bg);border-color: var(--yellow);}
+  .pill-tight .sz,.pill-tight .pd { color: var(--yellow); }
+  .pill-rec { background: var(--green-bg);  border: 2px solid var(--green-border); }
+  .pill-rec .sz,.pill-rec .pd { color: var(--green); }
+  .pill-ok  { background: var(--green-bg);  border-color: var(--border); }
+  .pill-ok  .sz,.pill-ok  .pd { color: var(--green); }
+
+  /* ── CODE ANALYZER ───────────────────────────────────────────────────── */
+  textarea {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    min-height: 170px;
+    resize: vertical;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    padding: 10px 12px;
+    line-height: 1.7;
+    outline: none;
+    transition: border-color var(--transition);
+  }
+  textarea:focus { border-color: var(--border-focus); }
+  textarea::placeholder { color: var(--text-muted); }
+
+  .breakdown-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: none;
+  }
+  .bk-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .bk-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .bk-row:last-child { border-bottom: none; }
+  .bk-ins { font-family: var(--font-mono); color: var(--text); }
+  .bk-right { display: flex; align-items: center; gap: 8px; }
+  .bk-bytes { font-family: var(--font-mono); font-weight: 600; color: var(--text-secondary); }
+  .bk-note { font-size: 10px; color: var(--text-muted); }
+  .badge-warn {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--yellow-bg);
+    color: var(--yellow);
+    margin-left: 5px;
+    font-family: var(--font-sans);
+  }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid var(--border);
+  }
+  .total-lbl { font-size: 12px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .total-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--result-main); }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────────── */
+  .footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────────── */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <span class="logo-name">Hex<span>Kit</span></span>
+      <span class="logo-sub">Calculadora Hexadecimal</span>
+    </div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">
+      <span id="theme-icon">☀️</span>
+      <span id="theme-label">Claro</span>
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('hex')">Calculadora Hex</button>
+    <button class="tab" onclick="switchTab('code')">Analisar Código CE (Cheat Engine)</button>
+  </div>
+
+  <!-- ── HEX TAB ─────────────────────────────────────────────────────── -->
+  <div class="panel active" id="tab-hex">
+
+    <div class="sec">operação binária (B op A)</div>
+    <div class="ops">
+      <button class="op-btn active" id="op-sub" onclick="setOp('-','sub')">B − A</button>
+      <button class="op-btn" id="op-add" onclick="setOp('+','add')">B + A</button>
+      <button class="op-btn" id="op-mul" onclick="setOp('*','mul')">B × A</button>
+      <button class="op-btn" id="op-div" onclick="setOp('/','div')">B ÷ A</button>
+      <button class="op-btn" id="op-mod" onclick="setOp('%','mod')">B mod A</button>
+      <button class="op-btn" id="op-and" onclick="setOp('&','and')">B &amp; A</button>
+      <button class="op-btn" id="op-or"  onclick="setOp('|','or')">B | A</button>
+      <button class="op-btn" id="op-xor" onclick="setOp('^','xor')">B ^ A</button>
+      <button class="op-btn" id="op-shl" onclick="setOp('<<','shl')">B &lt;&lt; A</button>
+      <button class="op-btn" id="op-shr" onclick="setOp('>>','shr')">B &gt;&gt; A</button>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">
+        <span class="badge-lbl">B</span>
+        Endereço Final
+      </div>
+      <div class="field-row">
+        <input type="text" class="hex-input" id="va" placeholder="ex: 1A000180" oninput="calc()" />
+        <button class="swap-btn" onclick="swapAB()" title="Trocar A ↔ B">⇅</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">
+        <span class="badge-lbl">A</span>
+        Endereço Inicial
+      </div>
+      <div class="field-row">
+        <input type="text" class="hex-input" id="vb" placeholder="ex: 1A000000" oninput="calc()" />
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec">operação unária (só B)</div>
+    <div class="unary-row">
+      <button class="unary-btn" onclick="unary('not')">NOT (~B)</button>
+      <button class="unary-btn" onclick="unary('neg')">NEG (−B)</button>
+      <button class="unary-btn" onclick="unary('align4')">Align 4</button>
+      <button class="unary-btn" onclick="unary('align16')">Align 16</button>
+      <button class="unary-btn" onclick="unary('nextpow2')">Próx. pot. 2</button>
+    </div>
+
+    <div class="err" id="err"></div>
+
+    <div class="result-card" id="result-card">
+      <div class="result-main-row">
+        <div>
+          <div class="result-main-lbl">HEX</div>
+          <div class="result-main-val" id="r-hex">—</div>
+        </div>
+        <button class="copy-btn" onclick="copyResult()">Copiar</button>
+      </div>
+      <div class="result-grid">
+        <div class="result-item">
+          <span class="result-item-lbl">DEC</span>
+          <span class="result-item-val" id="r-dec">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-item-lbl">Bytes</span>
+          <span class="result-item-val" id="r-bytes">—</span>
+        </div>
+        <div class="result-item result-bin">
+          <span class="result-item-lbl">BIN</span>
+          <span class="result-item-val" id="r-bin" style="font-size:11px">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="alloc-card" id="alloc-card">
+      <div class="alloc-title">Recomendação de alloc(newmem, $???)</div>
+      <div class="alloc-grid" id="alloc-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- ── CODE TAB ────────────────────────────────────────────────────── -->
+  <div class="panel" id="tab-code">
+
+    <div class="sec" style="margin-bottom:8px">cole o bloco newmem: ... até o último jmp return</div>
+    <textarea id="code-input" placeholder="newmem:
+code:
+  push rax
+  lea rax,[rcx+21C]
+  mov [myglobal],rax
+  pop rax
+  movss xmm1,[rcx+21C]
+  jmp return
+  align 16" oninput="parseCode()"></textarea>
+
+    <div class="err" id="code-err"></div>
+
+    <div class="breakdown-card" id="breakdown-card">
+      <div class="bk-head"><span>instrução</span><span>bytes</span></div>
+      <div id="bk-list"></div>
+      <div class="total-row">
+        <span class="total-lbl">Total estimado</span>
+        <span class="total-val" id="bk-total">—</span>
+      </div>
+    </div>
+
+    <div class="alloc-card" id="code-alloc-card" style="margin-top:12px">
+      <div class="alloc-title">Recomendação de alloc(newmem, $???)</div>
+      <div class="alloc-grid" id="code-alloc-grid"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">HexKit · by FinuraBR</div>
+
+</div>
+
+<script>
+// ── THEME ─────────────────────────────────────────────────────────────────────
+(function(){
+  const saved = localStorage.getItem('hexkit-theme') || 'dark';
+  applyTheme(saved);
+})();
+
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').textContent  = t === 'dark' ? '☀️' : '🌙';
+  document.getElementById('theme-label').textContent = t === 'dark' ? 'Claro' : 'Escuro';
+}
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('hexkit-theme', next);
+  applyTheme(next);
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((b,i) =>
+    b.classList.toggle('active', ['hex','code'][i] === t));
+  document.getElementById('tab-hex').classList.toggle('active',  t === 'hex');
+  document.getElementById('tab-code').classList.toggle('active', t === 'code');
+}
+
+// ── HEX CALC ──────────────────────────────────────────────────────────────────
+let op = '-';
+const sizes = [
+  {h:'$40',b:64},{h:'$80',b:128},{h:'$100',b:256},{h:'$200',b:512},
+  {h:'$400',b:1024},{h:'$800',b:2048},{h:'$1000',b:4096},
+  {h:'$2000',b:8192},{h:'$4000',b:16384},{h:'$8000',b:32768}
+];
+
+function setOp(o, id){
+  op = o;
+  document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('op-' + id).classList.add('active');
+  calc();
+}
+
+function parseHex(s){
+  s = s.trim().replace(/^0x/i, '');
+  if (!s || !/^[0-9A-Fa-f]+$/.test(s)) return null;
+  return BigInt('0x' + s);
+}
+
+function showResult(res){
+  const neg = res < 0n, abs = neg ? -res : res;
+  show('err', false);
+  show('result-card', true);
+  document.getElementById('r-hex').textContent =
+    (neg ? '-' : '') + '0x' + abs.toString(16).toUpperCase();
+  document.getElementById('r-dec').textContent = res.toString();
+  document.getElementById('r-bin').textContent =
+    (neg ? '-' : '') + '0b' + abs.toString(2);
+  const n = Number(abs);
+  document.getElementById('r-bytes').textContent = neg
+    ? 'N/A'
+    : n.toLocaleString('pt-BR') + ' B' + (n >= 1024 ? ' (' + (n/1024).toFixed(2) + ' KB)' : '');
+  renderAlloc(neg ? null : n, 'alloc-grid', 'alloc-card');
+}
+
+function showErr(msg){
+  const el = document.getElementById('err');
+  el.textContent = msg; el.style.display = 'block';
+  show('result-card', false);
+  show('alloc-card', false);
+}
+
+function calc(){
+  const a = parseHex(document.getElementById('va').value);
+  const b = parseHex(document.getElementById('vb').value);
+  if (!a || !b){
+    show('result-card', false);
+    show('alloc-card', false);
+    show('err', false);
+    return;
+  }
+  let res;
+  try {
+    if (op==='-')  res = b - a;
+    else if (op==='+') res = b + a;
+    else if (op==='*') res = b * a;
+    else if (op==='/'){if(b===0n){showErr('Divisão por zero');return} res=b/a;}
+    else if (op==='%'){if(b===0n){showErr('Divisão por zero');return} res=b%a;}
+    else if (op==='&')  res = b & a;
+    else if (op==='|')  res = b | a;
+    else if (op==='^')  res = b ^ a;
+    else if (op==='<<') res = b << a;
+    else if (op==='>>') res = b >> a;
+  } catch(e){ showErr('Erro no cálculo'); return; }
+  showResult(res);
+}
+
+function unary(t){
+  const raw = document.getElementById('vb').value.trim().replace(/^0x/i,'');
+  if (!raw || !/^[0-9A-Fa-f]+$/.test(raw)){ showErr('Preencha B com hex válido'); return; }
+  const a = BigInt('0x' + raw);
+  const bits = BigInt(raw.length <= 8 ? 32 : 64);
+  const mask = (1n << bits) - 1n;
+  let res;
+  if      (t==='not')      res = (~a) & mask;
+  else if (t==='neg')      res = (-a) & mask;
+  else if (t==='align4')   res = (a + 3n) & ~3n;
+  else if (t==='align16')  res = (a + 15n) & ~15n;
+  else if (t==='nextpow2'){
+    if (a === 0n){ showErr('B deve ser > 0'); return; }
+    let p = 1n; while (p < a) p <<= 1n; res = p;
+  }
+  showResult(res);
+}
+
+function swapAB(){
+  const va = document.getElementById('va');
+  const vb = document.getElementById('vb');
+  [va.value, vb.value] = [vb.value, va.value];
+  calc();
+}
+
+function copyResult(){
+  const val = document.getElementById('r-hex').textContent;
+  if (val === '—') return;
+  navigator.clipboard.writeText(val).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 1500);
+  });
+}
+
+// ── ALLOC RENDERER ────────────────────────────────────────────────────────────
+function renderAlloc(bytes, gridId, cardId){
+  const card = document.getElementById(cardId);
+  if (!bytes || bytes <= 0){ card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  const margin = bytes * 1.5;
+  let recIdx = sizes.findIndex(s => s.b >= margin);
+  if (recIdx < 0) recIdx = sizes.length - 1;
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  sizes.forEach((s, i) => {
+    const pct = Math.round((bytes / s.b) * 100);
+    let cls, desc;
+    if      (s.b < bytes)  { cls = 'pill-no';    desc = 'insuficiente'; }
+    else if (s.b < margin) { cls = 'pill-tight';  desc = pct + '% usado'; }
+    else if (i === recIdx) { cls = 'pill-rec';    desc = '★ ideal'; }
+    else                   { cls = 'pill-ok';     desc = pct + '% usado'; }
+    const d = document.createElement('div');
+    d.className = 'alloc-pill ' + cls;
+    d.innerHTML = '<div class="sz">' + s.h + '</div><div class="pd">' + desc + '</div>';
+    grid.appendChild(d);
+  });
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function show(id, visible){
+  document.getElementById(id).style.display = visible ? 'block' : 'none';
+}
+
+// ── CODE PARSER ───────────────────────────────────────────────────────────────
+const REGS64 = ['rax','rbx','rcx','rdx','rsi','rdi','rsp','rbp',
+                'r8','r9','r10','r11','r12','r13','r14','r15'];
+const REGS32 = ['eax','ebx','ecx','edx','esi','edi','esp','ebp',
+                'r8d','r9d','r10d','r11d','r12d','r13d','r14d','r15d'];
+
+function estimateBytes(line){
+  const l = line.trim().toLowerCase().replace(/\s+/g,' ');
+  if (!l || l.startsWith('//') || l.startsWith(';')) return null;
+
+  if (/^[a-z_][a-z0-9_]*:$/.test(l)) return { bytes:0, note:'label' };
+
+  const alignM = l.match(/^align\s+(\d+)$/);
+  if (alignM){ const n=parseInt(alignM[1]); return{bytes:Math.floor(n/2),note:'padding médio (0–'+(n-1)+')',warn:true}; }
+
+  const dbM = l.match(/^db\s+((?:[0-9a-f]{2}\s*)+)/);
+  if (dbM){ const c=dbM[1].trim().split(/\s+/).length; return{bytes:c,note:c+' byte(s) explícito(s)'}; }
+
+  if (/^dq\s+/.test(l)) return{bytes:8,note:'qword'};
+  if (/^dd\s+/.test(l)) return{bytes:4,note:'dword'};
+  if (/^dw\s+/.test(l)) return{bytes:2,note:'word'};
+
+  const nopNM = l.match(/^nop\s+(\d+)$/);
+  if (nopNM) return{bytes:parseInt(nopNM[1]),note:'multi-nop'};
+  if (l==='nop') return{bytes:1,note:''};
+
+  if (/^jmp\s+/.test(l)){
+    const isReg = REGS64.some(r=>l.includes(' '+r)) || REGS32.some(r=>l.includes(' '+r));
+    return isReg ? {bytes:2,note:'jmp reg'} : {bytes:5,note:'jmp rel32'};
+  }
+  if (/^call\s+/.test(l)){
+    const isReg = REGS64.some(r=>l.includes(' '+r));
+    return isReg ? {bytes:2,note:'call reg'} : {bytes:5,note:'call rel32'};
+  }
+  if (/^j[a-z]{1,3}\s+/.test(l)) return{bytes:6,note:'jcc rel32'};
+
+  if (l==='ret'||l==='ret 0') return{bytes:1,note:''};
+  if (/^ret\s+\d+/.test(l))   return{bytes:3,note:'ret imm16'};
+
+  if (/^push\s+/.test(l)){
+    if (REGS64.some(r=>l.endsWith(' '+r))) return{bytes:1,note:'push r64'};
+    return{bytes:2,note:'push'};
+  }
+  if (/^pop\s+/.test(l)) return{bytes:1,note:'pop r64'};
+
+  if (/^(movss|movsd|mulss|mulsd|addss|addsd|subss|subsd|divss|divsd|movaps|movups|movdqa|movdqu)\s+/.test(l)){
+    const hasMem = l.includes('[');
+    return{bytes:hasMem?8:4,note:'SSE'+(hasMem?'+mem':'')};
+  }
+
+  if (/^(movzx|movsx)\s+/.test(l)) return{bytes:4,note:''};
+  if (/^lea\s+/.test(l))           return{bytes:7,note:'lea r64,[base+disp]'};
+
+  if (/^mov\s+/.test(l)){
+    const hasMem = l.includes('[');
+    const hasImm = /,\s*(0x[0-9a-f]+|\d+)$/.test(l);
+    if (hasMem)  return{bytes:7,note:'mov mem'};
+    if (hasImm)  return{bytes:7,note:'mov r,imm'};
+    return{bytes:3,note:'mov r,r'};
+  }
+
+  if (/^(add|sub|and|or|xor|cmp|test)\s+/.test(l)){
+    return{bytes:l.includes('[')?6:3,note:''};
+  }
+  if (/^(imul|idiv|mul|div)\s+/.test(l)) return{bytes:3,note:''};
+  if (/^(inc|dec)\s+/.test(l))           return{bytes:3,note:''};
+  if (['cdq','cqo','cdqe'].includes(l))  return{bytes:2,note:''};
+  if (/^xchg\s+/.test(l))               return{bytes:3,note:''};
+
+  // x87 FPU
+  if (/^(fld|fstp|fst|fadd|fsub|fmul|fdiv)\s+/.test(l)) return{bytes:4,note:'x87 FPU'};
+
+  return{bytes:4,note:'estimativa',warn:true};
+}
+
+function parseCode(){
+  const raw = document.getElementById('code-input').value;
+  const errEl = document.getElementById('code-err');
+  const card  = document.getElementById('breakdown-card');
+  const allocCard = document.getElementById('code-alloc-card');
+
+  if (!raw.trim()){
+    card.style.display = 'none';
+    allocCard.style.display = 'none';
+    errEl.style.display = 'none';
+    return;
+  }
+
+  const lines = raw.split('\n');
+  const startIdx = lines.findIndex(l =>
+    /^\s*newmem\s*:/i.test(l) || /^\s*code\s*:/i.test(l));
+  const workLines = startIdx >= 0 ? lines.slice(startIdx) : lines;
+
+  const list = document.getElementById('bk-list');
+  list.innerHTML = '';
+  let total = 0, hasContent = false;
+
+  workLines.forEach(rawLine => {
+    const stripped = rawLine.replace(/\/\/.*$/, '').replace(/;.*$/, '').trim();
+    if (!stripped) return;
+    const est = estimateBytes(stripped);
+    if (!est || est.note === 'label') return;
+    hasContent = true;
+    total += est.bytes;
+    const row = document.createElement('div');
+    row.className = 'bk-row';
+    const ins = stripped.length > 38 ? stripped.slice(0, 38) + '…' : stripped;
+    row.innerHTML =
+      `<span class="bk-ins">${ins}${est.warn ? '<span class="badge-warn">~</span>' : ''}</span>` +
+      `<div class="bk-right"><span class="bk-note">${est.note || ''}</span><span class="bk-bytes">${est.bytes}B</span></div>`;
+    list.appendChild(row);
+  });
+
+  if (!hasContent){
+    errEl.textContent = 'Nenhuma instrução reconhecida. Cole o bloco entre newmem: e o último jmp return.';
+    errEl.style.display = 'block';
+    card.style.display = 'none';
+    allocCard.style.display = 'none';
+    return;
+  }
+
+  errEl.style.display = 'none';
+  document.getElementById('bk-total').textContent = total + ' bytes';
+  card.style.display = 'block';
+  renderAlloc(total, 'code-alloc-grid', 'code-alloc-card');
+}
+</script>
+</body>
+</html>
