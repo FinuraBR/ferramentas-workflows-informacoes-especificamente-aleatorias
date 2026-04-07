@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>r.ScreenPercentage Calculator</title>
 <style>
-  /* ── TOKENS ─────────────────────────────────────────────────────────── */
   :root {
     --font-mono: 'Consolas', 'Fira Code', 'Courier New', monospace;
     --font-sans: 'Segoe UI', system-ui, sans-serif;
@@ -71,7 +70,6 @@
 
   .container { max-width: 700px; margin: 0 auto; }
 
-  /* ── HEADER ──────────────────────────────────────────────────────────── */
   .header {
     display: flex;
     align-items: center;
@@ -80,273 +78,154 @@
   }
   .logo { display: flex; align-items: baseline; gap: 8px; }
   .logo-name {
-    font-size: 20px;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    color: var(--text);
-    letter-spacing: -0.5px;
+    font-size: 20px; font-weight: 700;
+    font-family: var(--font-mono); color: var(--text); letter-spacing: -0.5px;
   }
   .logo-name span { color: var(--accent); }
   .logo-sub { font-size: 12px; color: var(--text-muted); }
 
   .theme-btn {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 6px 12px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 6px 12px;
+    cursor: pointer; color: var(--text-secondary); font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
     transition: background var(--transition);
   }
   .theme-btn:hover { background: var(--bg-hover); color: var(--text); }
 
-  /* ── TABS ────────────────────────────────────────────────────────────── */
-  .tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
-  }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .tab {
-    padding: 10px 20px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    border: none;
-    border-bottom: 2px solid transparent;
-    background: transparent;
-    font-weight: 500;
-    transition: color var(--transition);
+    padding: 10px 20px; font-size: 13px; cursor: pointer;
+    color: var(--text-secondary); border: none;
+    border-bottom: 2px solid transparent; background: transparent;
+    font-weight: 500; transition: color var(--transition);
   }
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--text); border-bottom-color: var(--accent); }
   .panel { display: none; }
   .panel.active { display: block; }
 
-  /* ── SEC LABEL ───────────────────────────────────────────────────────── */
   .sec {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    font-size: 10px; color: var(--text-muted); font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
   }
 
-  /* ── FIELD ───────────────────────────────────────────────────────────── */
   .field-group { margin-bottom: 14px; }
   .field-label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-weight: 500;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 11px; color: var(--text-secondary); font-weight: 500;
+    margin-bottom: 5px; display: flex; align-items: center; gap: 8px;
   }
 
   select.res-select, input.res-input {
-    width: 100%;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 9px 12px;
-    color: var(--text);
-    outline: none;
-    cursor: pointer;
-    transition: border-color var(--transition);
-    appearance: none;
-    -webkit-appearance: none;
+    width: 100%; font-family: var(--font-mono); font-size: 14px;
+    background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 9px 12px; color: var(--text);
+    outline: none; cursor: pointer; transition: border-color var(--transition);
+    appearance: none; -webkit-appearance: none;
   }
-  select.res-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  select.res-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  }
   select.res-select:focus, input.res-input:focus { border-color: var(--border-focus); }
   input.res-input::placeholder { color: var(--text-muted); }
-  input.res-input.invalid { border-color: var(--red); }
 
   .custom-row {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px;
-    align-items: center;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 8px; align-items: center;
   }
-  .custom-sep {
-    color: var(--text-muted);
-    font-size: 13px;
-    text-align: center;
-    font-family: var(--font-mono);
-  }
+  .custom-sep { color: var(--text-muted); font-size: 13px; text-align: center; font-family: var(--font-mono); }
 
   .toggle-custom {
-    font-size: 11px;
-    color: var(--accent);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    font-family: var(--font-sans);
-    margin-left: auto;
+    font-size: 11px; color: var(--accent); background: none;
+    border: none; cursor: pointer; padding: 0; font-family: var(--font-sans); margin-left: auto;
   }
   .toggle-custom:hover { text-decoration: underline; }
 
-  /* ── INPUT GRID ──────────────────────────────────────────────────────── */
   .inputs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 16px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
   }
   @media (max-width: 480px) { .inputs-grid { grid-template-columns: 1fr; } }
 
-  /* ── DIVIDER ─────────────────────────────────────────────────────────── */
   .divider { height: 1px; background: var(--border); margin: 16px 0; }
 
-  /* ── RESULTS GRID ────────────────────────────────────────────────────── */
   .results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 14px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
   }
   @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
 
   .result-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 14px 16px;
   }
   .result-card-lbl {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 600;
-    margin-bottom: 6px;
+    font-size: 10px; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 600; margin-bottom: 6px;
   }
   .result-card-val {
-    font-size: 32px;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    color: var(--result-main);
-    line-height: 1;
+    font-size: 32px; font-weight: 600; font-family: var(--font-mono);
+    color: var(--result-main); line-height: 1;
   }
   .result-card-val.downscale { color: var(--yellow); }
-  .result-card-val.upscale   { color: var(--green);  }
+  .result-card-val.upscale   { color: var(--green); }
   .result-card-val.native    { color: var(--text-muted); }
   .result-card-sub {
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-top: 5px;
-    font-family: var(--font-mono);
-  }
-  .result-card-exact {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 3px;
-    font-family: var(--font-mono);
+    font-size: 12px; color: var(--text-secondary); margin-top: 5px; font-family: var(--font-mono);
   }
 
-  /* ── RENDERED RES CARD ───────────────────────────────────────────────── */
   .render-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 12px;
+    display: none; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
   .render-item { display: flex; flex-direction: column; gap: 2px; }
   .render-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
   .render-val { font-size: 15px; font-family: var(--font-mono); color: var(--text); font-weight: 600; }
   .render-arrow { font-size: 18px; color: var(--text-muted); }
 
-  /* ── WARNINGS ────────────────────────────────────────────────────────── */
   .warn-box {
-    font-size: 12px;
-    border-radius: var(--radius-sm);
-    padding: 7px 12px;
-    margin-bottom: 10px;
-    display: none;
+    font-size: 12px; border-radius: var(--radius-sm);
+    padding: 7px 12px; margin-bottom: 10px; display: none;
   }
   .warn-box.yellow { color: var(--yellow); background: var(--yellow-bg); border: 1px solid var(--yellow); }
   .warn-box.red    { color: var(--red);    background: var(--red-bg);    border: 1px solid var(--red); }
   .warn-box.green  { color: var(--green);  background: var(--green-bg);  border: 1px solid var(--green); }
 
-  /* ── COMMAND BOX ─────────────────────────────────────────────────────── */
   .commands-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 14px 16px;
   }
   .cmd-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border);
   }
   .cmd-row:last-child { border-bottom: none; padding-bottom: 0; }
   .cmd-row:first-child { padding-top: 0; }
   .cmd-context {
-    font-size: 10px;
-    color: var(--text-muted);
-    min-width: 80px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 600;
+    font-size: 10px; color: var(--text-muted); min-width: 80px;
+    text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
   }
-  .cmd-val {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text);
-    flex: 1;
-    user-select: all;
-  }
+  .cmd-val { font-family: var(--font-mono); font-size: 13px; color: var(--text); flex: 1; user-select: all; }
   .copy-btn {
-    background: var(--bg-active);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 3px 10px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-size: 11px;
-    transition: background var(--transition);
-    white-space: nowrap;
-    flex-shrink: 0;
+    background: var(--bg-active); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 3px 10px; cursor: pointer;
+    color: var(--text-secondary); font-size: 11px;
+    transition: background var(--transition); white-space: nowrap; flex-shrink: 0;
   }
   .copy-btn:hover { background: var(--bg-hover); color: var(--text); }
 
-  /* ── REVERSE TAB ─────────────────────────────────────────────────────── */
+  /* ── REVERSE TAB */
   .reverse-result {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    margin-top: 14px;
-    display: none;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 14px 16px; margin-top: 14px; display: none;
   }
   .rev-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-    margin-top: 12px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin-top: 12px;
   }
   .rev-item {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 10px 12px;
+    background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 12px;
   }
   .rev-item-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
   .rev-item-val { font-size: 14px; font-family: var(--font-mono); color: var(--text); font-weight: 600; }
@@ -354,72 +233,39 @@
   .rev-item.highlight { border-color: var(--accent); background: var(--accent-dim); }
   .rev-item.highlight .rev-item-val { color: var(--accent); }
 
-  /* ── PERCENTAGE SLIDER ───────────────────────────────────────────────── */
-  .pct-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
+  /* ── SLIDER */
+  .pct-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   input[type="range"] {
-    flex: 1;
-    height: 4px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: var(--border);
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
+    flex: 1; height: 4px; -webkit-appearance: none; appearance: none;
+    background: var(--border); border-radius: 2px; outline: none; cursor: pointer;
   }
   input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px; height: 16px;
-    background: var(--accent);
-    border-radius: 50%;
-    cursor: pointer;
+    -webkit-appearance: none; width: 16px; height: 16px;
+    background: var(--accent); border-radius: 50%; cursor: pointer;
   }
   input[type="range"]::-moz-range-thumb {
-    width: 16px; height: 16px;
-    background: var(--accent);
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
+    width: 16px; height: 16px; background: var(--accent);
+    border-radius: 50%; border: none; cursor: pointer;
   }
-  .pct-input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+  .pct-input-wrap { display: flex; align-items: center; gap: 4px; }
   input.pct-num {
-    width: 72px;
-    font-family: var(--font-mono);
-    font-size: 15px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 6px 8px;
-    color: var(--text);
-    outline: none;
-    text-align: right;
-    transition: border-color var(--transition);
+    width: 72px; font-family: var(--font-mono); font-size: 15px;
+    background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 8px; color: var(--text);
+    outline: none; text-align: right; transition: border-color var(--transition);
   }
   input.pct-num:focus { border-color: var(--border-focus); }
   .pct-sym { font-size: 15px; color: var(--text-secondary); font-family: var(--font-mono); }
 
-  /* ── FOOTER ──────────────────────────────────────────────────────────── */
   .footer {
-    margin-top: 40px;
-    text-align: center;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
+    margin-top: 40px; text-align: center; font-size: 11px;
+    color: var(--text-muted); font-family: var(--font-mono);
   }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="logo">
       <span class="logo-name">r.<span>ScreenPercentage</span></span>
@@ -431,18 +277,16 @@
     </button>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
     <button class="tab active" onclick="switchTab('calc')">Calculadora</button>
     <button class="tab" onclick="switchTab('reverse')">Reverso</button>
   </div>
 
-  <!-- ── CALCULADORA TAB ──────────────────────────────────────────────── -->
+  <!-- ── CALCULADORA ──────────────────────────────────────────────────── -->
   <div class="panel active" id="tab-calc">
 
     <div class="inputs-grid">
 
-      <!-- NATIVE -->
       <div class="field-group">
         <div class="field-label">
           Resolução nativa (monitor)
@@ -460,7 +304,6 @@
         </div>
       </div>
 
-      <!-- TARGET -->
       <div class="field-group">
         <div class="field-label">
           Resolução alvo (renderização)
@@ -480,13 +323,11 @@
 
     </div>
 
-    <!-- WARNINGS -->
     <div class="warn-box yellow" id="warn-aspect">⚠ Proporções diferentes — o jogo pode adicionar barras pretas ou distorcer a imagem.</div>
     <div class="warn-box yellow" id="warn-upscale">↑ Supersampling ativo — renderiza acima da resolução nativa (mais pesado).</div>
     <div class="warn-box green"  id="warn-native">✓ Resoluções idênticas — renderização nativa (100%).</div>
     <div class="warn-box red"    id="warn-low">⚠ Abaixo de 50% — qualidade muito baixa, artefatos visuais esperados.</div>
 
-    <!-- RENDERED RES -->
     <div class="render-card" id="render-card">
       <div class="render-item">
         <span class="render-lbl">Monitor</span>
@@ -504,12 +345,10 @@
       </div>
     </div>
 
-    <!-- RESULTS -->
     <div class="results-grid">
       <div class="result-card">
         <div class="result-card-lbl">r.ScreenPercentage</div>
         <div class="result-card-val" id="pct-val">—</div>
-        <div class="result-card-exact" id="pct-exact"></div>
         <div class="result-card-sub" id="pct-sub"></div>
       </div>
       <div class="result-card">
@@ -520,7 +359,6 @@
       </div>
     </div>
 
-    <!-- COMMANDS -->
     <div class="commands-card">
       <div class="sec" style="margin-bottom:10px">Comandos</div>
       <div class="cmd-row">
@@ -542,23 +380,23 @@
 
   </div>
 
-  <!-- ── REVERSO TAB ──────────────────────────────────────────────────── -->
+  <!-- ── REVERSO ──────────────────────────────────────────────────────── -->
   <div class="panel" id="tab-reverse">
 
     <div class="field-group">
-      <div class="field-label">Resolução nativa (monitor)</div>
+      <div class="field-label">
+        Resolução nativa (monitor)
+        <button class="toggle-custom" id="toggle-rev-native" onclick="toggleCustom('rev-native')">personalizar</button>
+      </div>
       <div id="rev-native-select-wrap">
         <select class="res-select" id="rev-native-select" onchange="calcReverse()"></select>
       </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-      <button class="toggle-custom" onclick="toggleCustom('rev-native')">personalizar</button>
-    </div>
-    <div id="rev-native-custom-wrap" style="display:none;margin-bottom:14px">
-      <div class="custom-row">
-        <input type="number" class="res-input" id="rev-native-w" placeholder="Largura" min="1" oninput="calcReverse()" />
-        <span class="custom-sep">×</span>
-        <input type="number" class="res-input" id="rev-native-h" placeholder="Altura" min="1" oninput="calcReverse()" />
+      <div id="rev-native-custom-wrap" style="display:none;margin-top:8px">
+        <div class="custom-row">
+          <input type="number" class="res-input" id="rev-native-w" placeholder="Largura" min="1" oninput="calcReverse()" />
+          <span class="custom-sep">×</span>
+          <input type="number" class="res-input" id="rev-native-h" placeholder="Altura" min="1" oninput="calcReverse()" />
+        </div>
       </div>
     </div>
 
@@ -573,20 +411,18 @@
       </div>
     </div>
 
-    <div class="warn-box yellow" id="rev-warn-low" style="display:none">⚠ Abaixo de 50% — qualidade muito baixa.</div>
-    <div class="warn-box green"  id="rev-warn-native" style="display:none">✓ 100% — renderização nativa.</div>
-    <div class="warn-box yellow" id="rev-warn-up" style="display:none">↑ Supersampling — acima de 100%.</div>
+    <div class="warn-box red"    id="rev-warn-low">⚠ Abaixo de 50% — qualidade muito baixa.</div>
+    <div class="warn-box green"  id="rev-warn-native">✓ 100% — renderização nativa.</div>
+    <div class="warn-box yellow" id="rev-warn-up">↑ Supersampling — acima de 100%.</div>
 
     <div class="reverse-result" id="rev-result">
       <div class="sec" style="margin-bottom:10px">Resolução que será renderizada</div>
       <div class="rev-grid" id="rev-grid"></div>
       <div class="divider"></div>
-      <div class="commands-card" style="margin-top:0;border:none;padding:0;background:transparent">
-        <div class="cmd-row" style="border-top:none">
-          <span class="cmd-context">Console</span>
-          <span class="cmd-val" id="rev-cmd">—</span>
-          <button class="copy-btn" onclick="copyCmd('rev-cmd', this)">Copiar</button>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:4px">
+        <span style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;min-width:80px">Console</span>
+        <span class="cmd-val" id="rev-cmd">—</span>
+        <button class="copy-btn" onclick="copyCmd('rev-cmd', this)">Copiar</button>
       </div>
     </div>
 
@@ -598,242 +434,214 @@
 <script>
 // ── THEME ─────────────────────────────────────────────────────────────────────
 (function(){
-  const saved = localStorage.getItem('screenpct-theme') || 'dark';
+  const saved = localStorage.getItem('scrpct-theme') || 'dark';
   applyTheme(saved);
 })();
+
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   document.getElementById('theme-icon').textContent  = t === 'dark' ? '☀️' : '🌙';
   document.getElementById('theme-label').textContent = t === 'dark' ? 'Claro' : 'Escuro';
 }
 function toggleTheme(){
-  const cur = document.documentElement.getAttribute('data-theme');
+  const cur  = document.documentElement.getAttribute('data-theme');
   const next = cur === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('screenpct-theme', next);
+  localStorage.setItem('scrpct-theme', next);
   applyTheme(next);
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
 function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i) =>
+  document.querySelectorAll('.tab').forEach((b, i) =>
     b.classList.toggle('active', ['calc','reverse'][i] === t));
-  document.getElementById('tab-calc').classList.toggle('active',    t === 'calc');
-  document.getElementById('tab-reverse').classList.toggle('active', t === 'reverse');
+  ['calc','reverse'].forEach(id =>
+    document.getElementById('tab-' + id).classList.toggle('active', id === t));
 }
 
-// ── RESOLUTION DATA ───────────────────────────────────────────────────────────
+// ── RESOLUTIONS — real 16:9 only (w = 16k, h = 9k) ───────────────────────────
+// No name tags; label is just "W × H"
 const resolutions = [
-  // 4:3
-  { w:640,  h:480,  label:'640×480',       tag:'VGA 4:3'        },
-  { w:800,  h:600,  label:'800×600',       tag:'SVGA 4:3'       },
-  { w:1024, h:768,  label:'1024×768',      tag:'XGA 4:3'        },
-  { w:1280, h:960,  label:'1280×960',      tag:'4:3'            },
-  { w:1600, h:1200, label:'1600×1200',     tag:'UXGA 4:3'       },
-  // 16:10
-  { w:1280, h:800,  label:'1280×800',      tag:'16:10'          },
-  { w:1440, h:900,  label:'1440×900',      tag:'16:10'          },
-  { w:1680, h:1050, label:'1680×1050',     tag:'16:10'          },
-  { w:1920, h:1200, label:'1920×1200',     tag:'16:10'          },
-  { w:2560, h:1600, label:'2560×1600',     tag:'MacBook 16:10'  },
-  // 16:9
-  { w:1280, h:720,  label:'1280×720',      tag:'720p HD'        },
-  { w:1366, h:768,  label:'1366×768',      tag:'HD+ laptop'     },
-  { w:1600, h:900,  label:'1600×900',      tag:'HD+ 16:9'       },
-  { w:1920, h:1080, label:'1920×1080',     tag:'1080p FHD'      },
-  { w:2048, h:1152, label:'2048×1152',     tag:'2K 16:9'        },
-  { w:2560, h:1440, label:'2560×1440',     tag:'1440p QHD'      },
-  { w:3200, h:1800, label:'3200×1800',     tag:'QHD+ 16:9'      },
-  { w:3840, h:2160, label:'3840×2160',     tag:'4K UHD'         },
-  { w:5120, h:2880, label:'5120×2880',     tag:'5K'             },
-  { w:7680, h:4320, label:'7680×4320',     tag:'8K UHD'         },
-  // Ultrawide 21:9
-  { w:2560, h:1080, label:'2560×1080',     tag:'FHD Ultrawide'  },
-  { w:3440, h:1440, label:'3440×1440',     tag:'QHD Ultrawide'  },
-  { w:3840, h:1600, label:'3840×1600',     tag:'WQHD+ Ultrawide'},
-  { w:5120, h:2160, label:'5120×2160',     tag:'5K Ultrawide'   },
-  // Ultrawide 32:9
-  { w:3840, h:1080, label:'3840×1080',     tag:'32:9 Dual FHD'  },
-  { w:5120, h:1440, label:'5120×1440',     tag:'32:9 Dual QHD'  },
+  [256,  144],
+  [512,  288],
+  [640,  360],
+  [960,  540],
+  [1024, 576],
+  [1280, 720],
+  [1600, 900],
+  [1920, 1080],
+  [2048, 1152],
+  [2560, 1440],
+  [3200, 1800],
+  [3840, 2160],
+  [5120, 2880],
+  [7680, 4320],
 ];
 
-function optionLabel(r){ return `${r.label}${r.tag ? '  —  ' + r.tag : ''}`; }
+function label(r){ return r[0] + ' × ' + r[1]; }
 
-function populateSelect(id){
-  const sel = document.getElementById(id);
-  resolutions.forEach((r, i) => {
-    const o = new Option(optionLabel(r), i);
-    sel.appendChild(o);
-  });
+// Percentage formatted to at most 2 decimal places, no trailing zeros
+function fmtPct(pct){
+  const rounded = Math.round(pct * 100) / 100;   // round to 2dp
+  // Remove trailing zeros: 75.10 → 75.1, 75.00 → 75
+  return parseFloat(rounded.toFixed(2)).toString();
 }
 
-populateSelect('native-select');
-populateSelect('target-select');
-populateSelect('rev-native-select');
-
-// Defaults: native = 1920×1080, target = 1280×720
-document.getElementById('native-select').value = resolutions.findIndex(r => r.w === 1920 && r.h === 1080);
-document.getElementById('target-select').value = resolutions.findIndex(r => r.w === 1280 && r.h === 720);
-document.getElementById('rev-native-select').value = resolutions.findIndex(r => r.w === 1920 && r.h === 1080);
+// ── POPULATE SELECTS ──────────────────────────────────────────────────────────
+(function populateSelects(){
+  ['native-select', 'target-select', 'rev-native-select'].forEach(id => {
+    const sel = document.getElementById(id);
+    resolutions.forEach((r, i) => sel.appendChild(new Option(label(r), i)));
+  });
+  document.getElementById('native-select').value     = resolutions.findIndex(r => r[0] === 1920);
+  document.getElementById('target-select').value     = resolutions.findIndex(r => r[0] === 1280);
+  document.getElementById('rev-native-select').value = resolutions.findIndex(r => r[0] === 1920);
+})();
 
 // ── CUSTOM TOGGLE ─────────────────────────────────────────────────────────────
-const customState = { native: false, target: false, 'rev-native': false };
+const _custom = {};
 function toggleCustom(which){
-  customState[which] = !customState[which];
-  const on = customState[which];
-  const selWrap = document.getElementById(which + '-select-wrap');
-  const cusWrap = document.getElementById(which + '-custom-wrap');
-  const btn     = document.getElementById('toggle-' + which);
-  if (selWrap) selWrap.style.display = on ? 'none' : 'block';
-  if (cusWrap) cusWrap.style.display = on ? 'block' : 'none';
-  if (btn)     btn.textContent = on ? 'usar lista' : 'personalizar';
-  if (which === 'rev-native') calcReverse(); else calc();
+  _custom[which] = !_custom[which];
+  const on = _custom[which];
+  const pfx = which === 'rev-native' ? 'rev-native' : which;
+  document.getElementById(pfx + '-select-wrap').style.display  = on ? 'none'  : 'block';
+  document.getElementById(pfx + '-custom-wrap').style.display  = on ? 'block' : 'none';
+  const btn = document.getElementById('toggle-' + which);
+  if (btn) btn.textContent = on ? 'usar lista' : 'personalizar';
+  which === 'rev-native' ? calcReverse() : calc();
 }
 
 // ── GET RESOLUTION ────────────────────────────────────────────────────────────
 function getRes(which){
-  if (customState[which]) {
-    const wEl = document.getElementById(which + '-w');
-    const hEl = document.getElementById(which + '-h');
-    const w = parseInt(wEl?.value), h = parseInt(hEl?.value);
-    if (!w || !h || w < 1 || h < 1) return null;
-    return { w, h, label: `${w}×${h}`, tag: 'personalizado' };
-  } else {
-    const sel = document.getElementById(which + '-select');
-    return resolutions[+sel.value] || null;
+  const pfx = which;
+  if (_custom[which]){
+    const w = parseInt(document.getElementById(pfx + '-w').value);
+    const h = parseInt(document.getElementById(pfx + '-h').value);
+    return (w > 0 && h > 0) ? [w, h] : null;
   }
+  const idx = +document.getElementById(pfx + '-select').value;
+  return resolutions[idx] || null;
 }
-
-// ── ASPECT RATIO ──────────────────────────────────────────────────────────────
-function gcd(a, b){ return b === 0 ? a : gcd(b, a % b); }
-function aspectRatio(w, h){
-  const d = gcd(w, h);
-  return `${w/d}:${h/d}`;
-}
-function aspectMatch(n, t){
-  const dn = gcd(n.w, n.h), dt = gcd(t.w, t.h);
-  return (n.w/dn === t.w/dt) && (n.h/dn === t.h/dt);
-}
-
-// ── SHOW / HIDE ───────────────────────────────────────────────────────────────
-function showWarn(id, visible){ document.getElementById(id).style.display = visible ? 'block' : 'none'; }
 
 // ── MAIN CALC ─────────────────────────────────────────────────────────────────
 function calc(){
   const n = getRes('native');
   const t = getRes('target');
-  if (!n || !t) return;
 
-  const pct     = (t.w / n.w) * 100;
-  const pctStr  = parseFloat(pct.toFixed(6)).toString();
-  const pctDisp = parseFloat(pct.toFixed(2));
-  const isExact = Number.isInteger(pct);
-  const mpxT    = (t.w * t.h / 1e6).toFixed(2);
-  const mpxN    = (n.w * n.h / 1e6).toFixed(2);
-  const saving  = (100 - (t.w * t.h) / (n.w * n.h) * 100).toFixed(1);
-  const gain    = ((t.w * t.h) / (n.w * n.h) * 100 - 100).toFixed(1);
+  ['warn-aspect','warn-upscale','warn-native','warn-low'].forEach(id =>
+    document.getElementById(id).style.display = 'none');
 
-  // pct card
+  if (!n || !t){
+    document.getElementById('render-card').style.display = 'none';
+    return;
+  }
+
+  const pct       = (t[0] / n[0]) * 100;
+  const pctFmt    = fmtPct(pct);
+  const isNative  = pct === 100;
+  const isUp      = pct > 100;
+  const isLow     = pct < 50;
+  const aspectDiff = Math.abs(n[0]/n[1] - t[0]/t[1]) > 0.01;
+
+  // Warnings
+  if (aspectDiff)        document.getElementById('warn-aspect').style.display  = 'block';
+  else if (isNative)     document.getElementById('warn-native').style.display  = 'block';
+  else if (isUp)         document.getElementById('warn-upscale').style.display = 'block';
+  if (isLow)             document.getElementById('warn-low').style.display     = 'block';
+
+  // Render card
+  document.getElementById('render-card').style.display    = 'flex';
+  document.getElementById('render-native').textContent    = n[0] + '×' + n[1];
+  document.getElementById('render-target').textContent    = t[0] + '×' + t[1];
+  document.getElementById('render-display').textContent   = n[0] + '×' + n[1];
+
+  // Percentage card
   const pctEl = document.getElementById('pct-val');
-  pctEl.textContent = pctDisp + '%';
-  pctEl.className = 'result-card-val' + (pct < 100 ? ' downscale' : pct > 100 ? ' upscale' : ' native');
+  pctEl.textContent = pctFmt + '%';
+  pctEl.className   = 'result-card-val ' + (isNative ? 'native' : isUp ? 'upscale' : 'downscale');
 
-  document.getElementById('pct-exact').textContent = isExact ? '' : `exato: ${pctStr}%`;
-  document.getElementById('pct-sub').textContent =
-    pct < 100 ? `↓ ${saving}% menos pixels`
-    : pct > 100 ? `↑ ${gain}% mais pixels`
-    : 'renderização nativa';
+  const sub = isNative ? 'renderização nativa'
+            : isUp     ? 'supersampling'
+            : fmtPct(100 - pct) + '% menos pixels';
+  document.getElementById('pct-sub').textContent = sub;
 
-  // mpx card
-  document.getElementById('mpx-val').textContent = mpxT + ' MP';
-  document.getElementById('mpx-sub').textContent = `nativo: ${mpxN} MP`;
+  // Megapixels card
+  const mpx  = (t[0] * t[1]) / 1e6;
+  const nmpx = (n[0] * n[1]) / 1e6;
+  document.getElementById('mpx-val').textContent = mpx.toFixed(2) + ' MP';
+  document.getElementById('mpx-sub').textContent = 'nativo: ' + nmpx.toFixed(2) + ' MP';
+
+  const pixRatio = (t[0] * t[1]) / (n[0] * n[1]) * 100;
   document.getElementById('mpx-ratio').textContent =
-    pct < 100 ? `economiza ${saving}%` : pct > 100 ? `+${gain}% pixels` : '';
+    pixRatio < 100 ? fmtPct(100 - pixRatio) + '% menos carga'
+  : pixRatio > 100 ? fmtPct(pixRatio - 100) + '% mais carga'
+  : 'carga nativa';
 
-  // render card
-  document.getElementById('render-native').textContent  = `${n.w}×${n.h}`;
-  document.getElementById('render-target').textContent  = `${t.w}×${t.h}`;
-  document.getElementById('render-display').textContent = `${n.w}×${n.h}`;
-
-  // warnings
-  showWarn('warn-aspect',   !aspectMatch(n, t));
-  showWarn('warn-upscale',  pct > 100);
-  showWarn('warn-native',   pct === 100);
-  showWarn('warn-low',      pct < 50);
-
-  // commands
-  const exact = isExact ? pct : parseFloat(pctStr);
-  document.getElementById('cmd-space').textContent = `r.ScreenPercentage ${exact}`;
-  document.getElementById('cmd-eq').textContent    = `r.ScreenPercentage=${exact}`;
-  document.getElementById('cmd-ini').textContent   = `[SystemSettings]\nr.ScreenPercentage=${exact}`;
+  // Commands
+  document.getElementById('cmd-space').textContent = 'r.ScreenPercentage ' + pctFmt;
+  document.getElementById('cmd-eq').textContent    = 'r.ScreenPercentage=' + pctFmt;
+  document.getElementById('cmd-ini').textContent   = 'r.ScreenPercentage=' + pctFmt;
 }
 
-// ── COPY ──────────────────────────────────────────────────────────────────────
-function copyCmd(id, btn){
-  const txt = document.getElementById(id).textContent;
-  if (!txt || txt === '—') return;
-  navigator.clipboard.writeText(txt).then(() => {
-    btn.textContent = 'Copiado!';
-    setTimeout(() => btn.textContent = 'Copiar', 1500);
-  });
-}
-
-// ── REVERSE CALC ──────────────────────────────────────────────────────────────
+// ── REVERSE TAB ───────────────────────────────────────────────────────────────
 function syncSlider(){
-  const v = document.getElementById('rev-slider').value;
-  document.getElementById('rev-pct').value = v;
+  document.getElementById('rev-pct').value = document.getElementById('rev-slider').value;
   calcReverse();
 }
 function syncInput(){
-  const v = parseFloat(document.getElementById('rev-pct').value);
-  if (!isNaN(v)) {
-    const clamped = Math.max(25, Math.min(200, v));
-    document.getElementById('rev-slider').value = clamped;
-  }
+  const v = Math.max(1, Math.min(400, parseInt(document.getElementById('rev-pct').value) || 75));
+  document.getElementById('rev-pct').value    = v;
+  document.getElementById('rev-slider').value = Math.min(200, v);
   calcReverse();
 }
 
 function calcReverse(){
-  const n = getRes('rev-native');
-  const pct = parseFloat(document.getElementById('rev-pct').value);
-  if (!n || isNaN(pct) || pct <= 0) return;
+  const n   = getRes('rev-native');
+  const pct = parseFloat(document.getElementById('rev-pct').value) || 75;
 
-  const factor = pct / 100;
-  const rW = Math.round(n.w * factor);
-  const rH = Math.round(n.h * factor);
-  const mpx = (rW * rH / 1e6).toFixed(2);
-  const mpxN = (n.w * n.h / 1e6).toFixed(2);
+  document.getElementById('rev-warn-low').style.display    = pct < 50   ? 'block' : 'none';
+  document.getElementById('rev-warn-native').style.display = pct === 100 ? 'block' : 'none';
+  document.getElementById('rev-warn-up').style.display     = pct > 100  ? 'block' : 'none';
 
-  showWarn('rev-warn-low',    pct < 50);
-  showWarn('rev-warn-native', pct === 100);
-  showWarn('rev-warn-up',     pct > 100);
+  if (!n){ document.getElementById('rev-result').style.display = 'none'; return; }
 
-  // find closest named resolution
-  let closest = null, closestDiff = Infinity;
-  resolutions.forEach(r => {
-    const diff = Math.abs(r.w - rW) + Math.abs(r.h - rH);
-    if (diff < closestDiff){ closestDiff = diff; closest = r; }
-  });
+  const rw  = Math.round(n[0] * pct / 100);
+  const rh  = Math.round(n[1] * pct / 100);
+  const mpx = (rw * rh) / 1e6;
+  const nmpx = (n[0] * n[1]) / 1e6;
+
+  document.getElementById('rev-result').style.display = 'block';
 
   const grid = document.getElementById('rev-grid');
   grid.innerHTML = '';
 
-  const items = [
-    { label: 'Resolução renderizada', val: `${rW} × ${rH}`, sub: aspectRatio(rW, rH), highlight: true },
-    { label: 'Megapixels',            val: mpx + ' MP',      sub: `vs ${mpxN} MP nativo` },
-    { label: 'Resolução mais próxima',val: closest ? closest.label : '—', sub: closest?.tag || '' },
-  ];
+  const pixRatio = (rw * rh) / (n[0] * n[1]) * 100;
+  const cargaTxt = pixRatio < 100 ? fmtPct(100 - pixRatio) + '% a menos'
+                 : pixRatio > 100 ? fmtPct(pixRatio - 100) + '% a mais'
+                 : 'nativa';
 
-  items.forEach(item => {
+  [
+    { lbl:'Resolução renderizada', val: rw + ' × ' + rh,          sub: '',                          hi: true },
+    { lbl:'Megapixels',            val: mpx.toFixed(2) + ' MP',   sub: 'nativo: ' + nmpx.toFixed(2) + ' MP' },
+    { lbl:'Variação de carga',     val: cargaTxt,                  sub: '' },
+  ].forEach(item => {
     const d = document.createElement('div');
-    d.className = 'rev-item' + (item.highlight ? ' highlight' : '');
-    d.innerHTML = `<div class="rev-item-label">${item.label}</div>
-      <div class="rev-item-val">${item.val}</div>
-      <div class="rev-item-sub">${item.sub}</div>`;
+    d.className = 'rev-item' + (item.hi ? ' highlight' : '');
+    d.innerHTML = '<div class="rev-item-label">' + item.lbl + '</div>'
+                + '<div class="rev-item-val">'   + item.val + '</div>'
+                + (item.sub ? '<div class="rev-item-sub">' + item.sub + '</div>' : '');
     grid.appendChild(d);
   });
 
-  document.getElementById('rev-cmd').textContent = `r.ScreenPercentage ${pct}`;
-  document.getElementById('rev-result').style.display = 'block';
+  document.getElementById('rev-cmd').textContent = 'r.ScreenPercentage ' + fmtPct(pct);
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────────────
+function copyCmd(id, btn){
+  const val = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 1500);
+  }).catch(() => {});
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
