@@ -11,7 +11,7 @@ preservação de coisas que levaram tempo pra descobrir e valem ser documentadas
 - [Source.cfg — Config de Qualidade Máxima para Source Engine](#source)
 - [UE4.ini — Config de Qualidade Máxima para Unreal Engine 4/5](#ue4ini)
 - [Tradução jogos UE Workflow.txt — Pipeline de Tradução Automatizada para Jogos UE](#tradução-jogos-ue-workflow)
-- [r.ScreenPercentage calculator UE games.html — Calculadora de r.ScreenPercentage para Jogos UE](#rscreenpercentage-calculator-ue-games)
+- [r.ScreenPercentage Calculator.html](#rscreenpercentage-calculator)
 - [HexKit.html — Calculadora Hexadecimal](#HexKit)
 - [Tabela de Tipos de Dados e Limites.md](#tabela-de-tipos-de-dados-e-limites)
 
@@ -111,7 +111,7 @@ está no repositório linkado.
 
 ---
 
-### <a name="rscreenpercentage-calculator-ue-games"></a>`r.ScreenPercentage calculator UE games.html` — Calculadora de r.ScreenPercentage para Jogos UE
+### <a name="rscreenpercentage-calculator"></a>`r.ScreenPercentage Calculator.html`
 
 Ferramenta HTML standalone para calcular o valor correto de `r.ScreenPercentage`
 em jogos Unreal Engine. Útil para configurar renderização interna abaixo ou acima
