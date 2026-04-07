@@ -12,7 +12,7 @@ preservação de coisas que levaram tempo pra descobrir e valem ser documentadas
 - [UE4.ini — Config de Qualidade Máxima para Unreal Engine 4/5](#ue4ini)
 - [Tradução jogos UE Workflow.txt — Pipeline de Tradução Automatizada para Jogos UE](#tradução-jogos-ue-workflow)
 - [r.ScreenPercentage calculator UE games.html — Calculadora de r.ScreenPercentage para Jogos UE](#rscreenpercentage-calculator-ue-games)
-- [cheat engine calculadora.html — Calculadora Hexadecimal](#cheat-engine-calculadora)
+- [HexKit.html — Calculadora Hexadecimal](#HexKit)
 - [Tabela de Tipos de Dados e Limites.md](#tabela-de-tipos-de-dados-e-limites)
 
 ---
@@ -139,20 +139,19 @@ dentro de `[SystemSettings]`.
 
 ---
 
-### <a name="cheat-engine-calculadora"></a>`cheat engine calculadora.html` — Calculadora Hexadecimal
+### <a name="HexKit"></a>`HexKit.html` — Calculadora Hexadecimal
 
-Ferramenta HTML standalone para operações com valores hexadecimais. Nasceu
-como auxiliar para Cheat Engine, mas serve para qualquer contexto que envolva
-aritmética e lógica em hex — offsets de memória, endereços, máscaras de bits,
+Ferramenta HTML standalone para operações com valores hexadecimais. Serve para qualquer contexto que envolva
+aritmética e lógica em hex, offsets de memória, endereços, máscaras de bits,
 scripts de assembly, etc.
 
 **Aba: Calculadora Hex**
 
-Realiza operações binárias entre dois valores hex (A e B):
+Realiza operações binárias entre dois valores hex (B e A):
 
-`A − B` `A + B` `A × B` `A ÷ B` `A mod B` `A & B` `A | B` `A ^ B` `A << B` `A >> B`
+`B − A` `B + A` `B × A` `B ÷ A` `B mod A` `B & A` `B | A` `B ^ A` `B << A` `B >> A`
 
-Também suporta operações unárias sobre A:
+Também suporta operações unárias sobre B:
 NOT, NEG, Align 4, Align 16 e próxima potência de 2.
 
 O resultado é exibido simultaneamente em HEX, DEC, BIN e em bytes (com
@@ -160,7 +159,7 @@ conversão para KB quando aplicável). Para valores positivos, exibe uma
 recomendação visual de tamanho para `alloc(newmem, $???)` do Cheat Engine,
 indicando qual bloco é insuficiente, apertado ou ideal com base no valor calculado.
 
-**Aba: Analisar Código CE**
+**Aba: Analisar Código CE (Cheat Engine)**
 
 Cole um bloco de auto-assembler do Cheat Engine (de `newmem:` até o último
 `jmp return`) e a ferramenta estima o tamanho em bytes de cada instrução,
