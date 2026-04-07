@@ -12,7 +12,7 @@ preservação de coisas que levaram tempo pra descobrir e valem ser documentadas
 - [UE4.ini — Config de Qualidade Máxima para Unreal Engine 4/5](#ue4ini)
 - [Tradução jogos UE Workflow.txt — Pipeline de Tradução Automatizada para Jogos UE](#tradução-jogos-ue-workflow)
 - [r.ScreenPercentage Calculator.html](#rscreenpercentage-calculator)
-- [HexKit.html — Calculadora Hexadecimal](#HexKit)
+- [HexKit.html — Calculadora Hexadecimal](#hexkit)
 - [Tabela de Tipos de Dados e Limites.md](#tabela-de-tipos-de-dados-e-limites)
 
 ---
@@ -139,7 +139,7 @@ dentro de `[SystemSettings]`.
 
 ---
 
-### <a name="HexKit"></a>`HexKit.html` — Calculadora Hexadecimal
+### <a name="hexkit"></a>`HexKit.html` — Calculadora Hexadecimal
  
 Ferramenta HTML standalone para operações com valores hexadecimais. Serve para qualquer contexto que envolva aritmética e lógica em hex, offsets de memória, endereços, máscaras de bits, scripts de assembly, conversão de floats, etc. Tema claro/escuro persistente, funciona completamente offline.
  
