@@ -424,7 +424,16 @@
   .total-lbl { font-size: 12px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
   .total-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--result-main); }
 
-  /* ── FOOTER ──────────────────────────────────────────────────────────── */
+  /* ── INPUT VALIDATION ────────────────────────────────────────────────── */
+  input.hex-input.invalid { border-color: var(--red) !important; }
+
+  /* ── RESPONSIVE BIT VIEWER ───────────────────────────────────────────── */
+  @media (max-width: 500px) {
+    .bit-cell { width: 14px; height: 18px; font-size: 9px; }
+    .bit-idx-cell { width: 14px; font-size: 7px; }
+    .bit-sep { width: 4px; }
+    .bit-idx-sep { width: 4px; }
+  }
   .footer {
     margin-top: 40px;
     text-align: center;
@@ -435,6 +444,146 @@
 
   /* ── DIVIDER ─────────────────────────────────────────────────────────── */
   .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* ── BIT VIEWER ──────────────────────────────────────────────────────── */
+  .bit-viewer { margin-top: 12px; }
+  .bit-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .bit-width-toggle {
+    display: flex;
+    gap: 4px;
+  }
+  .bit-width-btn {
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: background var(--transition), color var(--transition);
+  }
+  .bit-width-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .bit-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-family: var(--font-mono);
+  }
+  .bit-group {
+    display: flex;
+    gap: 1px;
+  }
+  .bit-sep { width: 6px; }
+  .bit-cell {
+    width: 18px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    transition: background var(--transition);
+  }
+  .bit-cell.on  { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+  .bit-cell.off { background: var(--bg-input);   color: var(--text-muted); }
+  .bit-indices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: 2px;
+    font-size: 8px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .bit-idx-group { display: flex; gap: 1px; }
+  .bit-idx-cell { width: 18px; text-align: center; }
+  .bit-idx-sep  { width: 6px; }
+
+  /* ── HISTORY ─────────────────────────────────────────────────────────── */
+  .history-section { margin-top: 14px; }
+  .history-list { display: flex; flex-direction: column; gap: 4px; }
+  .history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .history-entry:hover { background: var(--bg-hover); border-color: var(--accent); }
+  .history-expr { color: var(--text-secondary); }
+  .history-result { color: var(--result-main); font-weight: 600; }
+
+  /* ── FLOAT TAB ───────────────────────────────────────────────────────── */
+  .float-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 520px) { .float-grid { grid-template-columns: 1fr; } }
+  .float-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .float-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .float-result-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .float-result-row:last-child { border-bottom: none; }
+  .float-result-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .float-result-val { font-size: 14px; font-family: var(--font-mono); color: var(--text); word-break: break-all; }
+  .float-result-val.special { color: var(--yellow); }
+  .float-result-val.neg     { color: var(--red); }
+  .float-result-val.zero    { color: var(--text-muted); }
+
+  .float-ref-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    margin-top: 4px;
+  }
+  .float-ref-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--font-mono); }
+  .float-ref-table th {
+    text-align: left; font-size: 10px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 4px 8px 8px 0; font-weight: 600; border-bottom: 1px solid var(--border);
+  }
+  .float-ref-table td { padding: 5px 8px 5px 0; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+  .float-ref-table tr:last-child td { border-bottom: none; }
+  .float-ref-table td:first-child { color: var(--text); }
+  .float-ref-table .hl { color: var(--yellow); }
 </style>
 </head>
 <body>
@@ -456,7 +605,8 @@
   <!-- TABS -->
   <div class="tabs">
     <button class="tab active" onclick="switchTab('hex')">Calculadora Hex</button>
-    <button class="tab" onclick="switchTab('code')">Analisar Código CE (Cheat Engine)</button>
+    <button class="tab" onclick="switchTab('float')">Conversor Float</button>
+    <button class="tab" onclick="switchTab('code')">Analisar Código CE</button>
   </div>
 
   <!-- ── HEX TAB ─────────────────────────────────────────────────────── -->
@@ -482,7 +632,7 @@
         Endereço Final
       </div>
       <div class="field-row">
-        <input type="text" class="hex-input" id="va" placeholder="ex: 1A000180" oninput="calc()" />
+        <input type="text" class="hex-input" id="va" placeholder="ex: 1A000180" oninput="validateInput('va');calc()" />
         <button class="swap-btn" onclick="swapAB()" title="Trocar A ↔ B">⇅</button>
       </div>
     </div>
@@ -493,7 +643,7 @@
         Endereço Inicial
       </div>
       <div class="field-row">
-        <input type="text" class="hex-input" id="vb" placeholder="ex: 1A000000" oninput="calc()" />
+        <input type="text" class="hex-input" id="vb" placeholder="ex: 1A000000" oninput="validateInput('vb');calc()" />
       </div>
     </div>
 
@@ -531,11 +681,98 @@
           <span class="result-item-val" id="r-bin" style="font-size:11px">—</span>
         </div>
       </div>
+      <!-- BIT VIEWER -->
+      <div class="bit-viewer" id="bit-viewer" style="display:none">
+        <div class="divider" style="margin:12px 0 10px"></div>
+        <div class="bit-viewer-header">
+          <span class="result-item-lbl">Bits</span>
+          <div class="bit-width-toggle">
+            <button class="bit-width-btn active" id="bw-32" onclick="setBitWidth(32)">32-bit</button>
+            <button class="bit-width-btn" id="bw-64" onclick="setBitWidth(64)">64-bit</button>
+          </div>
+        </div>
+        <div class="bit-grid" id="bit-grid"></div>
+        <div class="bit-indices" id="bit-indices"></div>
+      </div>
     </div>
 
     <div class="alloc-card" id="alloc-card">
       <div class="alloc-title">Recomendação de alloc(newmem, $???)</div>
       <div class="alloc-grid" id="alloc-grid"></div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="history-section" id="history-section" style="display:none">
+      <div class="sec" style="margin-bottom:6px">histórico (clique para restaurar)</div>
+      <div class="history-list" id="history-list"></div>
+    </div>
+
+  </div>
+
+  <!-- ── FLOAT TAB ───────────────────────────────────────────────────── -->
+  <div class="panel" id="tab-float">
+
+    <div class="float-grid">
+      <!-- HEX → FLOAT -->
+      <div class="float-card">
+        <div class="float-card-title">Hex → Float / Double</div>
+        <div class="field-group" style="margin-bottom:10px">
+          <div class="field-label">Valor Hex</div>
+          <input type="text" class="hex-input" id="fh-input" placeholder="ex: 3F800000" oninput="hexToFloat()" style="font-size:14px" />
+        </div>
+        <div id="fh-result">
+          <div class="float-result-row">
+            <span class="float-result-lbl">Float (32-bit)</span>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <span class="float-result-val" id="fh-f32">—</span>
+              <button class="copy-btn" onclick="copyFloatVal('fh-f32')">Copiar</button>
+            </div>
+          </div>
+          <div class="float-result-row">
+            <span class="float-result-lbl">Double (64-bit)</span>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <span class="float-result-val" id="fh-f64">—</span>
+              <button class="copy-btn" onclick="copyFloatVal('fh-f64')">Copiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLOAT → HEX -->
+      <div class="float-card">
+        <div class="float-card-title">Float / Double → Hex</div>
+        <div class="field-group" style="margin-bottom:10px">
+          <div class="field-label">Valor Decimal</div>
+          <input type="text" class="hex-input" id="fd-input" placeholder="ex: 1.0 ou -3.14" oninput="floatToHex()" style="font-size:14px;text-transform:none" />
+        </div>
+        <div id="fd-result">
+          <div class="float-result-row">
+            <span class="float-result-lbl">Float (32-bit)</span>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <span class="float-result-val" id="fd-f32">—</span>
+              <button class="copy-btn" onclick="copyFloatVal('fd-f32')">Copiar</button>
+            </div>
+          </div>
+          <div class="float-result-row">
+            <span class="float-result-lbl">Double (64-bit)</span>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <span class="float-result-val" id="fd-f64">—</span>
+              <button class="copy-btn" onclick="copyFloatVal('fd-f64')">Copiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABELA DE REFERÊNCIA -->
+    <div class="float-ref-card">
+      <div class="sec" style="margin-bottom:10px">valores notáveis (clique para usar)</div>
+      <table class="float-ref-table">
+        <thead>
+          <tr><th>Valor</th><th>Float Hex</th><th>Double Hex</th></tr>
+        </thead>
+        <tbody id="float-ref-body"></tbody>
+      </table>
     </div>
 
   </div>
@@ -598,9 +835,10 @@ function toggleTheme(){
 // ── TABS ──────────────────────────────────────────────────────────────────────
 function switchTab(t){
   document.querySelectorAll('.tab').forEach((b,i) =>
-    b.classList.toggle('active', ['hex','code'][i] === t));
-  document.getElementById('tab-hex').classList.toggle('active',  t === 'hex');
-  document.getElementById('tab-code').classList.toggle('active', t === 'code');
+    b.classList.toggle('active', ['hex','float','code'][i] === t));
+  document.getElementById('tab-hex').classList.toggle('active',   t === 'hex');
+  document.getElementById('tab-float').classList.toggle('active', t === 'float');
+  document.getElementById('tab-code').classList.toggle('active',  t === 'code');
 }
 
 // ── HEX CALC ──────────────────────────────────────────────────────────────────
@@ -624,12 +862,34 @@ function parseHex(s){
   return BigInt('0x' + s);
 }
 
-function showResult(res){
+function validateInput(id){
+  const el = document.getElementById(id);
+  const raw = el.value.trim().replace(/^0x/i,'');
+  if (raw === '' || /^[0-9A-Fa-f]+$/.test(raw)) {
+    el.classList.remove('invalid');
+  } else {
+    el.classList.add('invalid');
+  }
+}
+
+function copyFloatVal(id){
+  const el = document.getElementById(id);
+  const val = el.textContent;
+  if (val === '—') return;
+  navigator.clipboard.writeText(val).then(() => {
+    const btn = el.nextElementSibling || el.parentElement.querySelector('.copy-btn');
+    // find the copy-btn sibling
+    const copyBtn = el.closest('div').querySelector('.copy-btn');
+    if (copyBtn){ copyBtn.textContent = 'Copiado!'; setTimeout(()=> copyBtn.textContent = 'Copiar', 1500); }
+  });
+}
+
+function showResult(res, isCalc, exprStr){
   const neg = res < 0n, abs = neg ? -res : res;
   show('err', false);
   show('result-card', true);
-  document.getElementById('r-hex').textContent =
-    (neg ? '-' : '') + '0x' + abs.toString(16).toUpperCase();
+  const hexStr = (neg ? '-' : '') + '0x' + abs.toString(16).toUpperCase();
+  document.getElementById('r-hex').textContent = hexStr;
   document.getElementById('r-dec').textContent = res.toString();
   document.getElementById('r-bin').textContent =
     (neg ? '-' : '') + '0b' + abs.toString(2);
@@ -638,6 +898,15 @@ function showResult(res){
     ? 'N/A'
     : n.toLocaleString('pt-BR') + ' B' + (n >= 1024 ? ' (' + (n/1024).toFixed(2) + ' KB)' : '');
   renderAlloc(neg ? null : n, 'alloc-grid', 'alloc-card');
+  // bit viewer
+  if (!neg) {
+    renderBits(abs);
+    show('bit-viewer', true);
+  } else {
+    show('bit-viewer', false);
+  }
+  // history
+  if (isCalc && exprStr) addHistory(exprStr, hexStr);
 }
 
 function showErr(msg){
@@ -645,14 +914,26 @@ function showErr(msg){
   el.textContent = msg; el.style.display = 'block';
   show('result-card', false);
   show('alloc-card', false);
+  show('bit-viewer', false);
+}
+
+function parseHexSafe(s){
+  // Same as parseHex but returns null for empty/invalid, 0n for zero — never returns falsy 0n as null
+  s = s.trim().replace(/^0x/i, '');
+  if (!s || !/^[0-9A-Fa-f]+$/.test(s)) return null;
+  return BigInt('0x' + s); // may be 0n, which is valid
 }
 
 function calc(){
-  const a = parseHex(document.getElementById('va').value);
-  const b = parseHex(document.getElementById('vb').value);
-  if (!a || !b){
+  const aRaw = document.getElementById('va').value;
+  const bRaw = document.getElementById('vb').value;
+  const a = parseHexSafe(aRaw);
+  const b = parseHexSafe(bRaw);
+  // null means invalid/empty; 0n is valid
+  if (a === null || b === null){
     show('result-card', false);
     show('alloc-card', false);
+    show('bit-viewer', false);
     show('err', false);
     return;
   }
@@ -661,33 +942,37 @@ function calc(){
     if (op==='-')  res = b - a;
     else if (op==='+') res = b + a;
     else if (op==='*') res = b * a;
-    else if (op==='/'){if(b===0n){showErr('Divisão por zero');return} res=b/a;}
-    else if (op==='%'){if(b===0n){showErr('Divisão por zero');return} res=b%a;}
+    else if (op==='/'){if(a===0n){showErr('Divisão por zero');return} res=b/a;}
+    else if (op==='%'){if(a===0n){showErr('Divisão por zero');return} res=b%a;}
     else if (op==='&')  res = b & a;
     else if (op==='|')  res = b | a;
     else if (op==='^')  res = b ^ a;
     else if (op==='<<') res = b << a;
     else if (op==='>>') res = b >> a;
   } catch(e){ showErr('Erro no cálculo'); return; }
-  showResult(res);
+  const vaVal = aRaw.trim().toUpperCase();
+  const vbVal = bRaw.trim().toUpperCase();
+  const opSym = op === '-' ? '−' : op === '*' ? '×' : op === '/' ? '÷' : op;
+  showResult(res, true, vbVal + ' ' + opSym + ' ' + vaVal);
 }
 
 function unary(t){
   const raw = document.getElementById('vb').value.trim().replace(/^0x/i,'');
-  if (!raw || !/^[0-9A-Fa-f]+$/.test(raw)){ showErr('Preencha B com hex válido'); return; }
+  if (!raw || !/^[0-9A-Fa-f]+$/.test(raw)){ showErr('Preencha o campo Inicial com hex válido'); return; }
   const a = BigInt('0x' + raw);
   const bits = BigInt(raw.length <= 8 ? 32 : 64);
   const mask = (1n << bits) - 1n;
   let res;
+  const labels = {not:'NOT',neg:'NEG',align4:'Align4',align16:'Align16',nextpow2:'Pow2'};
   if      (t==='not')      res = (~a) & mask;
   else if (t==='neg')      res = (-a) & mask;
   else if (t==='align4')   res = (a + 3n) & ~3n;
   else if (t==='align16')  res = (a + 15n) & ~15n;
   else if (t==='nextpow2'){
-    if (a === 0n){ showErr('B deve ser > 0'); return; }
+    if (a === 0n){ showErr('Inicial deve ser > 0'); return; }
     let p = 1n; while (p < a) p <<= 1n; res = p;
   }
-  showResult(res);
+  showResult(res, true, labels[t] + '(' + raw.toUpperCase() + ')');
 }
 
 function swapAB(){
@@ -735,6 +1020,231 @@ function renderAlloc(bytes, gridId, cardId){
 function show(id, visible){
   document.getElementById(id).style.display = visible ? 'block' : 'none';
 }
+
+// ── BIT VIEWER ────────────────────────────────────────────────────────────────
+let bitWidth = 32;
+function setBitWidth(w){
+  bitWidth = w;
+  document.getElementById('bw-32').classList.toggle('active', w === 32);
+  document.getElementById('bw-64').classList.toggle('active', w === 64);
+  // re-render with last value
+  const hex = document.getElementById('r-hex').textContent.replace(/^-?0x/i,'');
+  if (hex && hex !== '—') renderBits(BigInt('0x' + hex));
+}
+
+function renderBits(val){
+  const w = bitWidth;
+  const mask = (1n << BigInt(w)) - 1n;
+  const v = val & mask;
+  const bits = v.toString(2).padStart(w, '0').split('');
+
+  const grid = document.getElementById('bit-grid');
+  const idxEl = document.getElementById('bit-indices');
+  grid.innerHTML = '';
+  idxEl.innerHTML = '';
+
+  // render in groups of 4 (nibbles), MSB first
+  for (let i = 0; i < w; i += 4) {
+    const group = document.createElement('div');
+    group.className = 'bit-group';
+    const idxGroup = document.createElement('div');
+    idxGroup.className = 'bit-idx-group';
+
+    for (let j = 0; j < 4; j++) {
+      const bitIdx = w - 1 - (i + j);
+      const bitVal = bits[i + j];
+      const cell = document.createElement('div');
+      cell.className = 'bit-cell ' + (bitVal === '1' ? 'on' : 'off');
+      cell.textContent = bitVal;
+      group.appendChild(cell);
+
+      const idx = document.createElement('div');
+      idx.className = 'bit-idx-cell';
+      idx.textContent = bitIdx % 8 === 0 || bitIdx === w-1 || bitIdx === 0 ? bitIdx : '';
+      idxGroup.appendChild(idx);
+    }
+    grid.appendChild(group);
+    idxEl.appendChild(idxGroup);
+
+    // separator every byte (8 bits = 2 groups of 4)
+    if (i + 4 < w && (i + 4) % 8 === 0) {
+      const sep = document.createElement('div'); sep.className = 'bit-sep';
+      const sepIdx = document.createElement('div'); sepIdx.className = 'bit-idx-sep';
+      grid.appendChild(sep);
+      idxEl.appendChild(sepIdx);
+    }
+  }
+}
+
+// ── HISTORY ───────────────────────────────────────────────────────────────────
+const calcHistory = JSON.parse(localStorage.getItem('hexkit-history') || '[]');
+
+function addHistory(expr, result){
+  if (calcHistory.length && calcHistory[0].expr === expr) return;
+  calcHistory.unshift({ expr, result });
+  if (calcHistory.length > 8) calcHistory.pop();
+  try { localStorage.setItem('hexkit-history', JSON.stringify(calcHistory)); } catch(e){}
+  renderHistory();
+}
+
+function renderHistory(){
+  const section = document.getElementById('history-section');
+  const list    = document.getElementById('history-list');
+  if (!calcHistory.length){ section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = '';
+  calcHistory.forEach(({ expr, result }) => {
+    const entry = document.createElement('div');
+    entry.className = 'history-entry';
+    entry.innerHTML =
+      `<span class="history-expr">${expr}</span>` +
+      `<span class="history-result">= ${result}</span>`;
+    entry.onclick = () => restoreFromHistory(expr, result);
+    list.appendChild(entry);
+  });
+}
+
+function restoreFromHistory(expr, result){
+  // Binary: "VBVAL OP VAVAL"
+  const binMatch = expr.match(/^([0-9A-Fa-f]+)\s*([\+\-×÷&\|\^]|mod|<<|>>)\s*([0-9A-Fa-f]+)$/);
+  if (binMatch) {
+    document.getElementById('vb').value = binMatch[1];
+    document.getElementById('va').value = binMatch[3];
+    calc();
+    return;
+  }
+  // Unary: "FUNC(VALUE)"
+  const unaryMatch = expr.match(/^(NOT|NEG|Align4|Align16|Pow2)\(([0-9A-Fa-f]+)\)$/);
+  if (unaryMatch) {
+    document.getElementById('vb').value = unaryMatch[2];
+    const fnMap = {NOT:'not',NEG:'neg',Align4:'align4',Align16:'align16',Pow2:'nextpow2'};
+    unary(fnMap[unaryMatch[1]]);
+  }
+}
+
+// render on load
+renderHistory();
+
+// ── FLOAT CONVERTER ───────────────────────────────────────────────────────────
+function f32classify(v){
+  if (isNaN(v))      return 'special';
+  if (!isFinite(v))  return 'special';
+  if (v === 0)       return 'zero';
+  if (v < 0)         return 'neg';
+  return '';
+}
+
+function formatFloat(v, digits){
+  if (isNaN(v))      return 'NaN';
+  if (v === Infinity)  return '+Infinity';
+  if (v === -Infinity) return '-Infinity';
+  if (Object.is(v, -0)) return '-0';
+  // show enough significant digits
+  const s = v.toPrecision(digits);
+  return parseFloat(s).toString() === v.toString() ? v.toString() : s;
+}
+
+function hexToF32(hex){
+  const buf = new ArrayBuffer(4);
+  new DataView(buf).setUint32(0, parseInt(hex.slice(-8), 16), false);
+  return new DataView(buf).getFloat32(0, false);
+}
+
+function hexToF64(hex){
+  const padded = hex.padStart(16, '0').slice(-16);
+  const hi = parseInt(padded.slice(0,8), 16);
+  const lo = parseInt(padded.slice(8,16), 16);
+  const buf = new ArrayBuffer(8);
+  const dv  = new DataView(buf);
+  dv.setUint32(0, hi, false);
+  dv.setUint32(4, lo, false);
+  return dv.getFloat64(0, false);
+}
+
+function f32ToHex(v){
+  const buf = new ArrayBuffer(4);
+  new DataView(buf).setFloat32(0, v, false);
+  return new DataView(buf).getUint32(0, false).toString(16).toUpperCase().padStart(8,'0');
+}
+
+function f64ToHex(v){
+  const buf = new ArrayBuffer(8);
+  new DataView(buf).setFloat64(0, v, false);
+  const dv = new DataView(buf);
+  const hi = dv.getUint32(0, false).toString(16).toUpperCase().padStart(8,'0');
+  const lo = dv.getUint32(4, false).toString(16).toUpperCase().padStart(8,'0');
+  return hi + lo;
+}
+
+function setFloatVal(el, val, digits){
+  const cls = f32classify(val);
+  el.className = 'float-result-val' + (cls ? ' ' + cls : '');
+  el.textContent = formatFloat(val, digits);
+}
+
+function hexToFloat(){
+  const raw = document.getElementById('fh-input').value.trim().replace(/^0x/i,'');
+  if (!raw || !/^[0-9A-Fa-f]+$/.test(raw)){
+    document.getElementById('fh-f32').textContent = '—';
+    document.getElementById('fh-f64').textContent = '—';
+    return;
+  }
+  setFloatVal(document.getElementById('fh-f32'), hexToF32(raw), 9);
+  setFloatVal(document.getElementById('fh-f64'), hexToF64(raw), 17);
+}
+
+function floatToHex(){
+  const raw = document.getElementById('fd-input').value.trim();
+  if (!raw){ 
+    document.getElementById('fd-f32').textContent = '—';
+    document.getElementById('fd-f64').textContent = '—';
+    return;
+  }
+  const v = parseFloat(raw);
+  if (isNaN(v) && raw !== 'NaN'){
+    document.getElementById('fd-f32').textContent = 'valor inválido';
+    document.getElementById('fd-f64').textContent = 'valor inválido';
+    return;
+  }
+  document.getElementById('fd-f32').textContent = '0x' + f32ToHex(v);
+  document.getElementById('fd-f32').className = 'float-result-val';
+  document.getElementById('fd-f64').textContent = '0x' + f64ToHex(v);
+  document.getElementById('fd-f64').className = 'float-result-val';
+}
+
+// Float reference table
+const floatRefs = [
+  { label: '+Inf',   f32: '7F800000', f64: '7FF0000000000000' },
+  { label: '-Inf',   f32: 'FF800000', f64: 'FFF0000000000000' },
+  { label: 'NaN',    f32: '7FC00000', f64: '7FF8000000000000' },
+  { label: '+0',     f32: '00000000', f64: '0000000000000000' },
+  { label: '-0',     f32: '80000000', f64: '8000000000000000' },
+  { label: '1.0',    f32: '3F800000', f64: '3FF0000000000000' },
+  { label: '-1.0',   f32: 'BF800000', f64: 'BFF0000000000000' },
+  { label: '0.5',    f32: '3F000000', f64: '3FE0000000000000' },
+  { label: '2.0',    f32: '40000000', f64: '4000000000000000' },
+  { label: '100.0',  f32: '42C80000', f64: '4059000000000000' },
+  { label: 'Máx F32',f32: '7F7FFFFF', f64: '47EFFFFFE0000000' },
+  { label: 'Mín F32',f32: '00800000', f64: '3810000000000000' },
+];
+
+(function buildFloatRef(){
+  const tbody = document.getElementById('float-ref-body');
+  floatRefs.forEach(r => {
+    const isSpecial = ['7F800000','FF800000','7FC00000'].includes(r.f32);
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.innerHTML =
+      `<td>${r.label}</td>` +
+      `<td class="${isSpecial ? 'hl' : ''}">${r.f32}</td>` +
+      `<td class="${isSpecial ? 'hl' : ''}" style="font-size:10px">${r.f64}</td>`;
+    tr.onclick = () => {
+      document.getElementById('fh-input').value = r.f32;
+      hexToFloat();
+    };
+    tbody.appendChild(tr);
+  });
+})();
 
 // ── CODE PARSER ───────────────────────────────────────────────────────────────
 const REGS64 = ['rax','rbx','rcx','rdx','rsi','rdi','rsp','rbp',
@@ -804,6 +1314,10 @@ function estimateBytes(line){
   if (/^(inc|dec)\s+/.test(l))           return{bytes:3,note:''};
   if (['cdq','cqo','cdqe'].includes(l))  return{bytes:2,note:''};
   if (/^xchg\s+/.test(l))               return{bytes:3,note:''};
+
+  // flags
+  if (['pushfq','pushfd','popfq','popfd'].includes(l)) return{bytes:1,note:'flags'};
+  if (['lahf','sahf'].includes(l))       return{bytes:1,note:''};
 
   // x87 FPU
   if (/^(fld|fstp|fst|fadd|fsub|fmul|fdiv)\s+/.test(l)) return{bytes:4,note:'x87 FPU'};
