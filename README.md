@@ -140,40 +140,48 @@ dentro de `[SystemSettings]`.
 ---
 
 ### <a name="HexKit"></a>`HexKit.html` — Calculadora Hexadecimal
-
-Ferramenta HTML standalone para operações com valores hexadecimais. Serve para qualquer contexto que envolva
-aritmética e lógica em hex, offsets de memória, endereços, máscaras de bits,
-scripts de assembly, etc.
-
+ 
+Ferramenta HTML standalone para operações com valores hexadecimais. Serve para qualquer contexto que envolva aritmética e lógica em hex, offsets de memória, endereços, máscaras de bits, scripts de assembly, conversão de floats, etc. Tema claro/escuro persistente, funciona completamente offline.
+ 
 **Aba: Calculadora Hex**
-
-Realiza operações binárias entre dois valores hex (B e A):
-
+ 
+Realiza operações binárias entre dois endereços hex (Final e Inicial):
+ 
 `B − A` `B + A` `B × A` `B ÷ A` `B mod A` `B & A` `B | A` `B ^ A` `B << A` `B >> A`
-
-Também suporta operações unárias sobre B:
+ 
+Também suporta operações unárias sobre o campo Inicial:
 NOT, NEG, Align 4, Align 16 e próxima potência de 2.
-
-O resultado é exibido simultaneamente em HEX, DEC, BIN e em bytes (com
-conversão para KB quando aplicável). Para valores positivos, exibe uma
-recomendação visual de tamanho para `alloc(newmem, $???)` do Cheat Engine,
-indicando qual bloco é insuficiente, apertado ou ideal com base no valor calculado.
-
-**Aba: Analisar Código CE (Cheat Engine)**
-
-Cole um bloco de auto-assembler do Cheat Engine (de `newmem:` até o último
-`jmp return`) e a ferramenta estima o tamanho em bytes de cada instrução,
-exibindo um breakdown linha a linha. Suporta:
-
-- Instruções comuns x64: `mov`, `lea`, `push`, `pop`, `add`, `sub`, `cmp`, `xchg`, `ret`, etc.
-- SSE: `movss`, `movsd`, `mulss`, `addss` e variantes
+ 
+O resultado é exibido em HEX, DEC, BIN e em bytes (com conversão para KB). Inclui:
+ 
+- **Visualizador de bits**: grade visual dos bits individuais agrupados em nibbles, com separação por byte e toggle entre 32-bit e 64-bit
+- **Recomendação de alloc**: indica qual tamanho de bloco CE é insuficiente, apertado ou ideal para o valor calculado (`$40` até `$8000`)
+- **Histórico**: últimos 8 cálculos persistidos entre sessões — clique para restaurar os campos automaticamente
+- **Botão swap**: troca Final e Inicial sem redigitar
+- **Validação visual**: borda vermelha em tempo real para entrada hex inválida
+ 
+**Aba: Conversor Float**
+ 
+Conversão bidirecional entre representação hexadecimal e ponto flutuante IEEE 754:
+ 
+- **Hex → Float/Double**: dado um valor hex, exibe a interpretação como Float (32-bit) e Double (64-bit) com destaque para valores especiais (NaN, ±Inf)
+- **Float/Double → Hex**: dado um valor decimal, retorna o hex correspondente em ambas as precisões. Aceita notação científica e valores especiais (`Infinity`, `NaN`)
+- **Tabela de referência clicável**: 12 valores notáveis (±Inf, NaN, ±0, 1.0, -1.0, 0.5, 2.0, 100.0, máximo e mínimo de Float) — clique numa linha para carregar no conversor
+ 
+**Aba: Analisar Código CE**
+ 
+Cole um bloco de auto-assembler do Cheat Engine (de `newmem:` até o último `jmp return`) e a ferramenta estima o tamanho em bytes de cada instrução, exibindo um breakdown linha a linha. Suporta:
+ 
+- Instruções comuns x64: `mov`, `lea`, `push`, `pop`, `add`, `sub`, `cmp`, `xchg`, `ret`, `inc`, `dec`, `imul`, `cdq`, `cqo` etc.
+- Flags: `pushfq`, `popfq`, `lahf`, `sahf`
+- SSE: `movss`, `movsd`, `mulss`, `addss`, `movaps`, `movdqa` e variantes
+- x87 FPU: `fld`, `fstp`, `fadd`, `fmul` e variantes
 - Saltos e calls: `jmp`, `call`, `jcc` (rel32 e via registrador)
 - Diretivas: `align N`, `db`, `dq`, `dd`, `dw`, `nop`
-
-Ao final exibe o total estimado de bytes e a mesma recomendação de `alloc`
-da aba anterior, facilitando saber qual tamanho de bloco alocar sem precisar
-contar manualmente.
-
+- Comentários `//` e `;` ignorados automaticamente
+ 
+Exibe o total estimado de bytes e a mesma recomendação de `alloc` da aba Hex.
+ 
 > Funciona diretamente no navegador, sem instalação ou dependências.
 > Abra o arquivo `.html` localmente e use offline.
 
