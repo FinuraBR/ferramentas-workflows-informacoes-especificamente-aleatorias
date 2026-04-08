@@ -23,7 +23,7 @@
     --border-focus:   #58a6ff;
     --text:           #e6edf3;
     --text-secondary: #8b949e;
-    --text-muted:     #484f58;
+    --text-muted:     #8b949e;
     --accent:         #58a6ff;
     --accent-dim:     #1f3b5a;
     --green:          #3fb950;
@@ -261,6 +261,33 @@
     margin-top: 40px; text-align: center; font-size: 11px;
     color: var(--text-muted); font-family: var(--font-mono);
   }
+
+  /* ── RATIO FILTER ────────────────────────────────────────────────────── */
+  .ratio-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .ratio-btn {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+  }
+  .ratio-btn:hover { background: var(--bg-hover); color: var(--text); }
+  .ratio-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -292,6 +319,7 @@
           Resolução nativa (monitor)
           <button class="toggle-custom" id="toggle-native" onclick="toggleCustom('native')">personalizar</button>
         </div>
+        <div class="ratio-filter" id="ratio-native"></div>
         <div id="native-select-wrap">
           <select class="res-select" id="native-select" onchange="calc()"></select>
         </div>
@@ -309,6 +337,7 @@
           Resolução alvo (renderização)
           <button class="toggle-custom" id="toggle-target" onclick="toggleCustom('target')">personalizar</button>
         </div>
+        <div class="ratio-filter" id="ratio-target"></div>
         <div id="target-select-wrap">
           <select class="res-select" id="target-select" onchange="calc()"></select>
         </div>
@@ -388,6 +417,7 @@
         Resolução nativa (monitor)
         <button class="toggle-custom" id="toggle-rev-native" onclick="toggleCustom('rev-native')">personalizar</button>
       </div>
+      <div class="ratio-filter" id="ratio-rev-native"></div>
       <div id="rev-native-select-wrap">
         <select class="res-select" id="rev-native-select" onchange="calcReverse()"></select>
       </div>
@@ -458,117 +488,194 @@ function switchTab(t){
     document.getElementById('tab-' + id).classList.toggle('active', id === t));
 }
 
-// ── RESOLUTIONS — real 16:9 ───────────────────────────
-const resolutions = [
-  [128, 72],
-  [256, 144],
-  [384, 216],
-  [512, 288],
-  [640, 360],
-  [768, 432],
-  [896, 504],
-  [1024, 576],
-  [1152, 648],
-  [1280, 720, 'HD'],
-  [1408, 792],
-  [1536, 864],
-  [1664, 936],
-  [1792, 1008],
-  [1920, 1080, 'Full HD'],
-  [2048, 1152],
-  [2176, 1224],
-  [2304, 1296],
-  [2432, 1368],
-  [2560, 1440, 'QHD'],
-  [2688, 1512],
-  [2816, 1584],
-  [2944, 1656],
-  [3072, 1728],
-  [3200, 1800],
-  [3328, 1872],
-  [3456, 1944],
-  [3584, 2016],
-  [3712, 2088],
-  [3840, 2160, '4K UHD'],
-  [3968, 2232],
-  [4096, 2304],
-  [4224, 2376],
-  [4352, 2448],
-  [4480, 2520],
-  [4608, 2592],
-  [4736, 2664],
-  [4864, 2736],
-  [4992, 2808],
-  [5120, 2880, '5K'],
-  [5248, 2952],
-  [5376, 3024],
-  [5504, 3096],
-  [5632, 3168],
-  [5760, 3240],
-  [5888, 3312],
-  [6016, 3384],
-  [6144, 3456],
-  [6272, 3528],
-  [6400, 3600],
-  [6528, 3672],
-  [6656, 3744],
-  [6784, 3816],
-  [6912, 3888],
-  [7040, 3960],
-  [7168, 4032],
-  [7296, 4104],
-  [7424, 4176],
-  [7552, 4248],
-  [7680, 4320, '8K UHD'],
-];
-
-function label(r) {
-  const tag = r[2] ? ` — ${r[2]}` : '';
-  return `${r[0]} × ${r[1]}${tag}`;
-}
-
+// ── HELPERS ───────────────────────────────────────────────────────────────────
 // Percentage formatted to at most 2 decimal places, no trailing zeros
 function fmtPct(pct){
-  const rounded = Math.round(pct * 100) / 100;   // round to 2dp
-  // Remove trailing zeros: 75.10 → 75.1, 75.00 → 75
+  const rounded = Math.round(pct * 100) / 100;
   return parseFloat(rounded.toFixed(2)).toString();
 }
 
-// ── POPULATE SELECTS ──────────────────────────────────────────────────────────
-(function populateSelects(){
-  ['native-select', 'target-select', 'rev-native-select'].forEach(id => {
-    const sel = document.getElementById(id);
-    resolutions.forEach((r, i) => sel.appendChild(new Option(label(r), i)));
-  });
-  document.getElementById('native-select').value     = resolutions.findIndex(r => r[0] === 1920);
-  document.getElementById('target-select').value     = resolutions.findIndex(r => r[0] === 2560);
-  document.getElementById('rev-native-select').value = resolutions.findIndex(r => r[0] === 1920);
-})();
-
-// ── CUSTOM TOGGLE ─────────────────────────────────────────────────────────────
 const _custom = {};
 function toggleCustom(which){
   _custom[which] = !_custom[which];
   const on = _custom[which];
-  const pfx = which === 'rev-native' ? 'rev-native' : which;
-  document.getElementById(pfx + '-select-wrap').style.display  = on ? 'none'  : 'block';
-  document.getElementById(pfx + '-custom-wrap').style.display  = on ? 'block' : 'none';
+  document.getElementById(which + '-select-wrap').style.display = on ? 'none'  : 'block';
+  document.getElementById(which + '-custom-wrap').style.display = on ? 'block' : 'none';
   const btn = document.getElementById('toggle-' + which);
   if (btn) btn.textContent = on ? 'usar lista' : 'personalizar';
   which === 'rev-native' ? calcReverse() : calc();
 }
 
-// ── GET RESOLUTION ────────────────────────────────────────────────────────────
-function getRes(which){
-  const pfx = which;
-  if (_custom[which]){
-    const w = parseInt(document.getElementById(pfx + '-w').value);
-    const h = parseInt(document.getElementById(pfx + '-h').value);
-    return (w > 0 && h > 0) ? [w, h] : null;
-  }
-  const idx = +document.getElementById(pfx + '-select').value;
-  return resolutions[idx] || null;
+// ── RESOLUTIONS (com ratio) ───────────────────────────────────────────────────
+const allResolutions = [
+  // 16:9
+  { w:128,  h:72,   ratio:'16:9' },
+  { w:256,  h:144,  ratio:'16:9' },
+  { w:384,  h:216,  ratio:'16:9' },
+  { w:512,  h:288,  ratio:'16:9' },
+  { w:640,  h:360,  ratio:'16:9' },
+  { w:768,  h:432,  ratio:'16:9' },
+  { w:896,  h:504,  ratio:'16:9' },
+  { w:1024, h:576,  ratio:'16:9' },
+  { w:1152, h:648,  ratio:'16:9' },
+  { w:1280, h:720,  ratio:'16:9', tag:'HD' },
+  { w:1408, h:792,  ratio:'16:9' },
+  { w:1536, h:864,  ratio:'16:9' },
+  { w:1664, h:936,  ratio:'16:9' },
+  { w:1792, h:1008, ratio:'16:9' },
+  { w:1920, h:1080, ratio:'16:9', tag:'FHD' },
+  { w:2048, h:1152, ratio:'16:9' },
+  { w:2176, h:1224, ratio:'16:9' },
+  { w:2304, h:1296, ratio:'16:9' },
+  { w:2432, h:1368, ratio:'16:9' },
+  { w:2560, h:1440, ratio:'16:9', tag:'QHD' },
+  { w:2688, h:1512, ratio:'16:9' },
+  { w:2816, h:1584, ratio:'16:9' },
+  { w:2944, h:1656, ratio:'16:9' },
+  { w:3072, h:1728, ratio:'16:9' },
+  { w:3200, h:1800, ratio:'16:9' },
+  { w:3328, h:1872, ratio:'16:9' },
+  { w:3456, h:1944, ratio:'16:9' },
+  { w:3584, h:2016, ratio:'16:9' },
+  { w:3712, h:2088, ratio:'16:9' },
+  { w:3840, h:2160, ratio:'16:9', tag:'4K UHD' },
+  { w:3968, h:2232, ratio:'16:9' },
+  { w:4096, h:2304, ratio:'16:9' },
+  { w:4224, h:2376, ratio:'16:9' },
+  { w:4352, h:2448, ratio:'16:9' },
+  { w:4480, h:2520, ratio:'16:9' },
+  { w:4608, h:2592, ratio:'16:9' },
+  { w:4736, h:2664, ratio:'16:9' },
+  { w:4864, h:2736, ratio:'16:9' },
+  { w:4992, h:2808, ratio:'16:9' },
+  { w:5120, h:2880, ratio:'16:9', tag:'5K' },
+  { w:5248, h:2952, ratio:'16:9' },
+  { w:5376, h:3024, ratio:'16:9' },
+  { w:5504, h:3096, ratio:'16:9' },
+  { w:5632, h:3168, ratio:'16:9' },
+  { w:5760, h:3240, ratio:'16:9' },
+  { w:5888, h:3312, ratio:'16:9' },
+  { w:6016, h:3384, ratio:'16:9' },
+  { w:6144, h:3456, ratio:'16:9' },
+  { w:6272, h:3528, ratio:'16:9' },
+  { w:6400, h:3600, ratio:'16:9' },
+  { w:6528, h:3672, ratio:'16:9' },
+  { w:6656, h:3744, ratio:'16:9' },
+  { w:6784, h:3816, ratio:'16:9' },
+  { w:6912, h:3888, ratio:'16:9' },
+  { w:7040, h:3960, ratio:'16:9' },
+  { w:7168, h:4032, ratio:'16:9' },
+  { w:7296, h:4104, ratio:'16:9' },
+  { w:7424, h:4176, ratio:'16:9' },
+  { w:7552, h:4248, ratio:'16:9' },
+  { w:7680, h:4320, ratio:'16:9', tag:'8K UHD' },
+  // 16:10
+  { w:1280, h:800,  ratio:'16:10' },
+  { w:1440, h:900,  ratio:'16:10' },
+  { w:1680, h:1050, ratio:'16:10' },
+  { w:1920, h:1200, ratio:'16:10' },
+  { w:2048, h:1280, ratio:'16:10' },
+  { w:2304, h:1440, ratio:'16:10' },
+  { w:2560, h:1600, ratio:'16:10', tag:'MacBook Pro' },
+  { w:2880, h:1800, ratio:'16:10', tag:'Retina' },
+  { w:3072, h:1920, ratio:'16:10' },
+  { w:3840, h:2400, ratio:'16:10' },
+  // 21:9 (ultrawide)
+  { w:2560, h:1080, ratio:'21:9', tag:'FHD Ultrawide' },
+  { w:3440, h:1440, ratio:'21:9', tag:'QHD Ultrawide' },
+  { w:3840, h:1600, ratio:'21:9', tag:'WQHD+ Ultrawide' },
+  { w:5120, h:2160, ratio:'21:9', tag:'5K Ultrawide' },
+  // 32:9 (super ultrawide)
+  { w:3840, h:1080, ratio:'32:9', tag:'Dual FHD' },
+  { w:5120, h:1440, ratio:'32:9', tag:'Dual QHD' },
+  { w:7680, h:2160, ratio:'32:9', tag:'Dual 4K' },
+  // 4:3
+  { w:640,  h:480,  ratio:'4:3', tag:'VGA' },
+  { w:800,  h:600,  ratio:'4:3', tag:'SVGA' },
+  { w:1024, h:768,  ratio:'4:3', tag:'XGA' },
+  { w:1280, h:960,  ratio:'4:3' },
+  { w:1400, h:1050, ratio:'4:3', tag:'SXGA+' },
+  { w:1600, h:1200, ratio:'4:3', tag:'UXGA' },
+  { w:2048, h:1536, ratio:'4:3' },
+];
+
+const ratioOrder = ['Todos','16:9','16:10','21:9','32:9','4:3'];
+
+// Estado do filtro por campo
+const _ratioFilter = { native:'Todos', target:'Todos', 'rev-native':'Todos' };
+
+function resLabel(r){
+  const tag = r.tag ? ` — ${r.tag}` : '';
+  return `${r.w} × ${r.h}${tag}`;
 }
+
+function filteredRes(which){
+  const f = _ratioFilter[which];
+  return allResolutions.filter(r => f === 'Todos' || r.ratio === f);
+}
+
+function populateSelect(selId, which, preferW){
+  const sel = document.getElementById(selId);
+  const list = filteredRes(which);
+  sel.innerHTML = '';
+  list.forEach((r, i) => sel.appendChild(new Option(resLabel(r), i)));
+  // try to keep selection on same resolution or closest
+  const target = preferW || allResolutions[0].w;
+  const idx = list.findIndex(r => r.w >= target);
+  sel.value = idx >= 0 ? idx : list.length - 1;
+}
+
+function setRatioFilter(which, ratio, selId, preferW){
+  _ratioFilter[which] = ratio;
+  // Update button states
+  document.querySelectorAll('[data-ratio-group="' + which + '"]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.ratio === ratio);
+  });
+  populateSelect(selId, which, preferW);
+  which === 'rev-native' ? calcReverse() : calc();
+}
+
+function getRes(which){
+  const selId = which + '-select';
+  if (_custom[which]){
+    const w = parseInt(document.getElementById(which + '-w').value);
+    const h = parseInt(document.getElementById(which + '-h').value);
+    return (w > 0 && h > 0) ? { w, h } : null;
+  }
+  const list = filteredRes(which);
+  const idx  = +document.getElementById(selId).value;
+  return list[idx] || null;
+}
+
+// ── POPULATE SELECTS ──────────────────────────────────────────────────────────
+(function init(){
+  // Build ratio filter chips for each field
+  [
+    { which:'native',     selId:'native-select',     preferW:1920 },
+    { which:'target',     selId:'target-select',     preferW:2560 },
+    { which:'rev-native', selId:'rev-native-select', preferW:1920 },
+  ].forEach(({ which, selId, preferW }) => {
+    const container = document.getElementById('ratio-' + which);
+    ratioOrder.forEach(ratio => {
+      const btn = document.createElement('button');
+      btn.className = 'ratio-btn' + (ratio === 'Todos' ? ' active' : '');
+      btn.textContent = ratio;
+      btn.dataset.ratioGroup = which;
+      btn.dataset.ratio = ratio;
+      btn.onclick = () => {
+        const curSel = document.getElementById(selId);
+        const curList = filteredRes(which);
+        const curRes = curList[+curSel.value];
+        setRatioFilter(which, ratio, selId, curRes ? curRes.w : preferW);
+      };
+      container.appendChild(btn);
+    });
+    // Wire select onchange
+    document.getElementById(selId).addEventListener('change', () =>
+      which === 'rev-native' ? calcReverse() : calc());
+    populateSelect(selId, which, preferW);
+  });
+})();
 
 // ── MAIN CALC ─────────────────────────────────────────────────────────────────
 function calc(){
@@ -583,12 +690,12 @@ function calc(){
     return;
   }
 
-  const pct       = (t[0] / n[0]) * 100;
+  const pct       = (t.w / n.w) * 100;
   const pctFmt    = fmtPct(pct);
   const isNative  = pct === 100;
   const isUp      = pct > 100;
   const isLow     = pct < 50;
-  const aspectDiff = Math.abs(n[0]/n[1] - t[0]/t[1]) > 0.01;
+  const aspectDiff = Math.abs(n.w/n.h - t.w/t.h) > 0.01;
 
   // Warnings
   if (aspectDiff)        document.getElementById('warn-aspect').style.display  = 'block';
@@ -598,9 +705,9 @@ function calc(){
 
   // Render card
   document.getElementById('render-card').style.display    = 'flex';
-  document.getElementById('render-native').textContent    = n[0] + '×' + n[1];
-  document.getElementById('render-target').textContent    = t[0] + '×' + t[1];
-  document.getElementById('render-display').textContent   = n[0] + '×' + n[1];
+  document.getElementById('render-native').textContent    = n.w + '×' + n.h;
+  document.getElementById('render-target').textContent    = t.w + '×' + t.h;
+  document.getElementById('render-display').textContent   = n.w + '×' + n.h;
 
   // Percentage card
   const pctEl = document.getElementById('pct-val');
@@ -613,12 +720,12 @@ function calc(){
   document.getElementById('pct-sub').textContent = sub;
 
   // Megapixels card
-  const mpx  = (t[0] * t[1]) / 1e6;
-  const nmpx = (n[0] * n[1]) / 1e6;
+  const mpx  = (t.w * t.h) / 1e6;
+  const nmpx = (n.w * n.h) / 1e6;
   document.getElementById('mpx-val').textContent = mpx.toFixed(2) + ' MP';
   document.getElementById('mpx-sub').textContent = 'nativo: ' + nmpx.toFixed(2) + ' MP';
 
-  const pixRatio = (t[0] * t[1]) / (n[0] * n[1]) * 100;
+  const pixRatio = (t.w * t.h) / (n.w * n.h) * 100;
   document.getElementById('mpx-ratio').textContent =
     pixRatio < 100 ? fmtPct(100 - pixRatio) + '% menos carga'
   : pixRatio > 100 ? fmtPct(pixRatio - 100) + '% mais carga'
@@ -652,10 +759,10 @@ function calcReverse(){
 
   if (!n){ document.getElementById('rev-result').style.display = 'none'; return; }
 
-  const rw  = Math.round(n[0] * pct / 100);
-  const rh  = Math.round(n[1] * pct / 100);
+  const rw  = Math.round(n.w * pct / 100);
+  const rh  = Math.round(n.h * pct / 100);
   const mpx = (rw * rh) / 1e6;
-  const nmpx = (n[0] * n[1]) / 1e6;
+  const nmpx = (n.w * n.h) / 1e6;
 
   document.getElementById('rev-result').style.display = 'block';
 
