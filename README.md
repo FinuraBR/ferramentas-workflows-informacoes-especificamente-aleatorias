@@ -115,26 +115,40 @@ está no repositório linkado.
 
 Ferramenta HTML standalone para calcular o valor correto de `r.ScreenPercentage`
 em jogos Unreal Engine. Útil para configurar renderização interna abaixo ou acima
-da resolução nativa do monitor (downscaling para performance ou supersampling para qualidade).
+da resolução nativa do monitor (downscaling para performance ou supersampling para qualidade). Tema claro/escuro persistente, funciona completamente offline.
 
-**Como funciona:**
+**Aba: Calculadora**
 
-Selecione a resolução nativa do seu monitor e a resolução alvo de renderização.
-A calculadora retorna:
+Selecione a resolução nativa do monitor e a resolução alvo de renderização. Cada
+campo tem filtros de aspect ratio independentes — troque entre `Todos` `16:9`
+`16:10` `21:9` `32:9` `4:3` sem afetar o outro campo. Suporte a entrada
+personalizada (qualquer largura × altura) via botão "personalizar". A calculadora
+retorna:
 
-- O valor exato de `r.ScreenPercentage` (com casas decimais quando necessário)
-- Total de megapixels renderizados vs nativo
-- Percentual de pixels economizados (downscale) ou adicionados (supersampling)
-- O comando completo pronto para copiar e colar no console do jogo ou no `Engine.ini`
+- O valor de `r.ScreenPercentage` formatado sem zeros desnecessários
+- Pipeline visual: Monitor → Renderiza em → Exibe em
+- Total de megapixels renderizados vs nativo e variação de carga estimada
+- Alertas contextuais: proporções diferentes entre os campos, supersampling ativo,
+  renderização nativa (100%), ou abaixo de 50% (qualidade muito baixa)
+- Três formatos de comando prontos para copiar: espaço (console), `=` (ini),
+  e bloco `[SystemSettings]`
 
-Suporta resoluções de 128×72 até 8K (7680×4320), incluindo atalhos para
-resolucões comuns como 720p, 1080p, 1440p, 4K e 5K.
+**Aba: Reverso**
+
+Dado o monitor nativo e uma porcentagem desejada, calcula qual resolução será
+efetivamente renderizada. Inclui slider de 10–200% e campo numérico (aceita até
+400%). Exibe a resolução renderizada, megapixels e variação de carga vs nativo.
+
+**Resoluções disponíveis:** 84 entradas cobrindo 16:9 (128×72 até 8K), 16:10
+(incluindo MacBook/Retina), 21:9 ultrawide (FHD/QHD/WQHD+/5K), 32:9
+super-ultrawide e 4:3. Filtros por ratio aplicados por campo, independentes entre
+nativo e alvo.
 
 > Funciona diretamente no navegador, sem instalação ou dependências.
 > Abra o arquivo `.html` localmente e use offline.
 
-**Como usar:** Abra o arquivo no navegador, selecione as resoluções e copie
-o comando gerado para o console do jogo (`~`) ou adicione ao `Engine.ini`
+**Como usar:** Abra o arquivo no navegador, selecione ou insira as resoluções e
+copie o comando gerado para o console do jogo (`~`) ou adicione ao `Engine.ini`
 dentro de `[SystemSettings]`.
 
 ---
